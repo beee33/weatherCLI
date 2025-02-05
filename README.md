@@ -36,9 +36,34 @@ Temperature graphs:
 
 The National Weather Service allows you to generate XML files showing weather data from a specific longitude and latitude. This program reads those XML files and presents them to the user as readable data. To calculate the sun positions, the program temporarily downloads the Javascript from NOAA’s old solar calculator: https://gml.noaa.gov/grad/solcalc/sunrise.html, and injects some javascript code to generate sun positions at time and location. It then uses js2py to compile the Javascript to Python.
 
+## Supported operating systems
+| OS           | Supported?                     |
+| :----------- | :--------------:               |
+| Debian       | :white_check_mark:             | 
+| Ubuntu       | :white_check_mark:             |
+| Mint | :large_orange_diamond: |
+| Arch | :large_orange_diamond: |
+| Fedora | :large_orange_diamond: |
+| Pop OS | :large_orange_diamond: |
+| EndeavourOS | :large_orange_diamond: |
+| Windows      | :x: |
+
+
+
+:white_check_mark:: Supported
+<br>
+:large_orange_diamond:: Untested
+<br>
+:x:: Broken
 
 ## Download
-### Build from source
+
+### from installer:
+
+### just run python file instead:
+
+
+### Build from source:
 
 
 #### install pyinstaller
@@ -77,9 +102,6 @@ This command fixes that so pyinstaller knows python's path.
 This should be replaced with your python version, I was using python 3.10.
 
     export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/python3.10
-
-
-### from installer
 
 
 
