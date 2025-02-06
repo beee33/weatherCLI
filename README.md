@@ -69,12 +69,12 @@ The National Weather Service allows you to generate XML files showing weather da
 ## Download
 
 ### from installer:
-
+TBD
 ### just run python file instead:
-
+TBD
 
 ### Build from source:
-
+TBD
 
 #### install pyinstaller
 
