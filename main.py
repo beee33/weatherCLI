@@ -598,10 +598,11 @@ if __name__ == '__main__':
                     url_string = "https://nominatim.openstreetmap.org/search.php?street="+args.zipcode[4:].replace(" ","+")+"&country=US&countrycodes=us&format=jsonv2"
                 case "town":
   
-                    url_string = "https://nominatim.openstreetmap.org/search.php?city="+args.zipcode[5:].split(" ")[0]+"&state="+args.zipcode.split(" ")[1]+"&country=US&countrycodes=us&format=jsonv2"
+                    url_string = "https://nominatim.openstreetmap.org/search.php?q="+ args.zipcode[5:][:args.zipcode[5:].rfind(" ")]+"+USA&format=jsonv2"
                 case "city":
     
-                    url_string = "https://nominatim.openstreetmap.org/search.php?city="+args.zipcode[5:].split(" ")[0]+"&state="+args.zipcode.split(" ")[1]+"&country=US&countrycodes=us&format=jsonv2"
+                    url_string = "https://nominatim.openstreetmap.org/search.php?q="+ args.zipcode[5:][:args.zipcode[5:].rfind(" ")]+"+USA&format=jsonv2"
+
                 case _:
                     raise Exception("header is invalid, begin with zip: poi: town: city:")
 
