@@ -84,7 +84,7 @@ TBD
 
 #### download file
 
-    wget wget https://raw.githubusercontent.com/beee33/weatherCLI/main/main.py 
+    wget https://raw.githubusercontent.com/beee33/weatherCLI/main/main.py 
 
 #### install pyinstaller
 
