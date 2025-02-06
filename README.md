@@ -69,7 +69,14 @@ The National Weather Service allows you to generate XML files showing weather da
 ## Download
 
 ### from installer:
-TBD
+
+download installer script:
+
+    wget https://raw.githubusercontent.com/beee33/weatherCLI/main/installer.sh 
+run script:
+
+    sudo sh installer.sh
+
 ### just run python file instead:
 TBD
 
