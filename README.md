@@ -1,6 +1,7 @@
 # weatherCLI
 
-WeatherCLI is a Linux command line UI based application that shows the user the weather from the National Weather Service written in Python
+WeatherCLI is a Linux command line UI based application that shows the user the weather from the National Weather Service written in Python. 
+Because of this, weatherCLI is only available in the United States, and its territories, However, the sun calculation is available for most of the places that share the same timezones as the United States, examples: Canada, Mexico and parts of western South America.
 
 Application for generating weather using data from NOAA
 -------------------------------------------------------
