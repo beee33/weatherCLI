@@ -2,6 +2,16 @@
 
 WeatherCLI is a Linux command line UI based application that shows the user the weather from the National Weather Service written in Python
 
+Application for generating weather using data from NOAA
+-------------------------------------------------------
+https://www.noaa.gov/
+https://weather.gov/
+https://gml.noaa.gov/grad/solcalc/sunrise.html
+
+Geocoding for latitude and longitude using data from OpenStreetMap
+------------------------------------------------------------------
+https://openstreetmap.org/copyright   
+https://nominatim.openstreetmap.org/
 
 
 ## What kind of data can the application show:
