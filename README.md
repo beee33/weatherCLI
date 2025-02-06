@@ -5,12 +5,15 @@ WeatherCLI is a Linux command line UI based application that shows the user the 
 Application for generating weather using data from NOAA
 -------------------------------------------------------
 https://www.noaa.gov/
+<br>
 https://weather.gov/
+<br>
 https://gml.noaa.gov/grad/solcalc/sunrise.html
 
 Geocoding for latitude and longitude using data from OpenStreetMap
 ------------------------------------------------------------------
 https://openstreetmap.org/copyright   
+<br>
 https://nominatim.openstreetmap.org/
 
 
@@ -119,7 +122,7 @@ TBD
 if you get the error: "[PYI-1890462:ERROR] Failed to load Python shared library '/tmp/_MEIWYQO9N/libpython3.10.so': dlopen: /tmp/_MEIWYQO9N/libpython3.10.so: cannot open shared object file: No such file or directory"
 
 This command fixes that so pyinstaller knows python's path.
-This should be replaced with your python version, I was using python 3.10.
+This should be replaced with your python version and the temp directory may be diffrent, I was using python 3.10.
 
     export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/python3.10
 
