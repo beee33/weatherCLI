@@ -2,6 +2,16 @@
 
 WeatherCLI is a Linux command line UI based application that shows the user the weather from the National Weather Service written in Python
 
+Application for generating weather using data from NOAA
+-------------------------------------------------------
+https://www.noaa.gov/
+https://weather.gov/
+https://gml.noaa.gov/grad/solcalc/sunrise.html
+
+Geocoding for latitude and longitude using data from OpenStreetMap
+------------------------------------------------------------------
+https://openstreetmap.org/copyright   
+https://nominatim.openstreetmap.org/
 
 
 ## What kind of data can the application show:
@@ -59,12 +69,12 @@ The National Weather Service allows you to generate XML files showing weather da
 ## Download
 
 ### from installer:
-
+TBD
 ### just run python file instead:
-
+TBD
 
 ### Build from source:
-
+TBD
 
 #### install pyinstaller
 
@@ -113,16 +123,28 @@ WeahterCLI uses OpenStreetMaps’s geocoding API to get latitude and longitude p
 
 
 #### Configurable to the data you want to see:
-<video autoplay src=''></video>
+<video autoplay src='https://github.com/user-attachments/assets/0d54eb4c-fbcb-4a5f-94e7-dd34c54d86c7'></video>
+
+
+
+
 
 #### Calculates sunrise and sunset:
-<video autoplay src=''></video>
+<video autoplay src='https://github.com/user-attachments/assets/055b9d86-cfbb-4416-9768-d3c778f76a3a'></video>
+
+
+
+
 
 
 #### Can get weather from zipcode, town/city name or point of intrest(ie: schools, goverment buildings and airports):
-<video autoplay src=''></video>
+<video autoplay src='https://github.com/user-attachments/assets/01623921-4ded-4bad-91e4-9441a3886d2e'></video>
+
+
+#### Can Combine multiple tags:
+<video autoplay src='https://github.com/user-attachments/assets/c7cb0ef4-c09d-4883-9a77-504ab44887d4'></video>
 
 #### Inbuilt documentation:
-<video autoplay src=''></video>
+<video autoplay src='https://github.com/user-attachments/assets/e87a1e42-ea32-45a8-bb17-eb480c3a8ebd'></video>
 
 ### *video only edited to speed up typing (program running time is at real time speed)
