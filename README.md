@@ -3,6 +3,10 @@
 WeatherCLI is a Linux command line UI based application that shows the user the weather from the National Weather Service written in Python. 
 Because of this, weatherCLI is only available in the United States, and its territories, However, the sun calculation is available for most of the places that share the same timezones as the United States, examples: Canada, Mexico and parts of western South America.
 
+
+![weatherCLI_image](https://github.com/user-attachments/assets/48d7198f-9ad0-4703-987c-cde9ec7c40e8)
+
+
 Application for generating weather using data from NOAA
 -------------------------------------------------------
 https://www.noaa.gov/
@@ -37,7 +41,7 @@ Live data from the location’s nearest weather station:
 - Name of station
 - Wind direction
 - Sustained wind speed
-- Wind gusts
+- Wind gusts (will show NA knots if no gusts)
 - Local station url if you want to get more information:
 
 Temperature graphs:
@@ -93,6 +97,10 @@ TBD
 #### install pyinstaller
 
     pip install pyinstaller
+
+*Note, you may have to use a virtual enviroment for some systems. You can use something like pyenv to create instances of python with diffrent versions: https://github.com/pyenv/pyenv 
+<br>
+For this program I would reccomend using python 3.10, as that is what version this program is written for. 
 
 #### compile to standalone binary
     pyinstaller main.py --onefile
