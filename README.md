@@ -59,14 +59,13 @@ The National Weather Service allows you to generate XML files showing weather da
 | :----------- | :--------------:               |
 | Debian       | :white_check_mark:             | 
 | Ubuntu       | :white_check_mark:             |
+| Fedora | :white_check_mark:    |
 | Arch | :white_check_mark:  |
 | Mint | :large_orange_diamond: |
-| Fedora | :large_orange_diamond: |
 | Pop OS | :large_orange_diamond: |
 | EndeavourOS | :large_orange_diamond: |
 | Windows      | :x: |
 
- -S 
 
 :white_check_mark:: Supported
 <br>
@@ -89,6 +88,12 @@ Debian/Ubuntu/Mint:
 Arch:
 
     pacman -S wget
+
+Fedora
+
+    sudo dnf install wget
+    
+*may already be installed
     
 #### download installer script:
 
