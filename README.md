@@ -66,7 +66,7 @@ The National Weather Service allows you to generate XML files showing weather da
 | EndeavourOS | :large_orange_diamond: |
 | Windows      | :x: |
 
-
+ -S 
 
 :white_check_mark:: Supported
 <br>
@@ -78,10 +78,22 @@ The National Weather Service allows you to generate XML files showing weather da
 
 ### from installer:
 
-download installer script:
+#### Dependencys: wget
+
+Can be installed from almost all package managers:
+
+Debian/Ubuntu/Mint:
+
+    sudo apt install wget
+
+Arch:
+
+    pacman -S wget
+    
+#### download installer script:
 
     wget https://raw.githubusercontent.com/beee33/WeatherTUI/main/installer.sh 
-run script:
+#### run script:
 
     sudo sh installer.sh
 
