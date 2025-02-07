@@ -11,12 +11,12 @@ fi
 remove_weather_cli() {
 	
 	# checks if file exists if not tell the user, having not binary is not a catastrophic problem
-	if [ -e /usr/bin/weatherCLI ]
+	if [ -e /usr/bin/weatherTUI ]
         then
 
 		# deletes file
-		rm /usr/bin/weatherCLI;
-		echo "deleted: /usr/bin/weatherCLI";
+		rm /usr/bin/weatherTUI;
+		echo "deleted: /usr/bin/weatherTUI";
 	else
 		echo "ERROR: data directory not found, so not deleting";
 	fi
@@ -24,17 +24,17 @@ remove_weather_cli() {
 	
 }
 
-# removes all of the config files within /etc/weatherCLI
+# removes all of the config files within /etc/weatherTUI
 remove_weather_cli_files() {
 
 
 	# checks if file exists
-	if [ -e /etc/weatherCLI ] 
+	if [ -e /etc/weatherTUI ] 
 	then 
-		rm -r /etc/weatherCLI 
-		echo "deleted: /etc/weatherCLI";
+		rm -r /etc/weatherTUI 
+		echo "deleted: /etc/weatherTUI";
 	else
-		echo "ERROR: weatherCLI file not found, so not deleting";
+		echo "ERROR: weatherTUI file not found, so not deleting";
 	fi
 }
 
@@ -48,36 +48,36 @@ remove_all() {
 install_weather() {
 	echo "installing";
 
-        wget https://github.com/beee33/weatherCLI/releases/download/v1.0.1/weatherCLI
+        wget https://github.com/beee33/weatherTUI/releases/download/v1.0.1/weatherTUI
    	echo "downloaded files";
 	
-	mv weatherCLI /usr/bin/weatherCLI
+	mv weatherTUI /usr/bin/weatherTUI
 	echo "moved to bin";
 
 	# checks if data directory already exists
-	if [ -e /etc/weatherCLI ]
+	if [ -e /etc/weatherTUI ]
 	then
-		echo "directory /etc/weatherCLI already exists";
+		echo "directory /etc/weatherTUI already exists";
 	else
 		# makes config directory
-		mkdir /etc/weatherCLI
+		mkdir /etc/weatherTUI
 		echo "made data directory";
 
 		# gives 777 perms to directory(directory meant to be accessable by all users
-		chmod 777 -R /etc/weatherCLI
+		chmod 777 -R /etc/weatherTUI
 		echo "perms given to file";
 	fi
 
 	# gives permitions to execute and read binary, but can only write if root
-	chmod 755 /usr/bin/weatherCLI
+	chmod 755 /usr/bin/weatherTUI
 }
 
 # runs loop to so it will the user will have to put in the right input
 while true
 do
-	echo "weatherCLI installer";
-	echo " 1) install weatherCLI";
-	echo " 2) remove weatherCLI";
+	echo "weatherTUI installer";
+	echo " 1) install weatherTUI";
+	echo " 2) remove weatherTUI";
 	echo " 3) exit";
 
 	# prints out a command prompt that reads to the install_type variable
@@ -103,14 +103,14 @@ if [ $install_type = "1" ]
 then	
 
 	# checks if binary exists, if so then tell user if they want to delete extra files
-	if [ -e /usr/bin/weatherCLI ]
+	if [ -e /usr/bin/weatherTUI ]
 	then
 		# will run a loop untill the user selects the one of the options
                 while true
 			do
 
         		# reads user input
-			echo -n "weatherCLI already exists, would you like to delete it? [Y/N]";
+			echo -n "weatherTUI already exists, would you like to delete it? [Y/N]";
         		read is_delete;
         	
 			if [ "$is_delete" = "Y" ] || [ "$is_delete" = "y" ]
@@ -134,7 +134,7 @@ if [ $install_type = "2" ]
 then
 
 	# checks if prevous configuration files exist in file system 
-	if [ -e /etc/weatherCLI ]
+	if [ -e /etc/weatherTUI ]
 	then
 
 		# will loop untill user selects valid responce
