@@ -55,7 +55,9 @@ install_weather() {
 	if [ -f weatherTUI ] 
 	then
        		mv weatherTUI /usr/bin/weatherTUI
-        	echo "moved to bin";		
+        	echo "moved to bin";
+		chmod 755 /usr/bin/weatherTUI		
+		echo "perms given to /usr/bin/weatherTUI";
 	else
 		echo "ERROR: weatherTUI is a directory, dont use installer in the same direcory as weaterCLI directory";
 		exit 1;
