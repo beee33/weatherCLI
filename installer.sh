@@ -47,8 +47,9 @@ remove_all() {
 # installer function
 install_weather() {
 	echo "installing";
-
-        wget https://github.com/beee33/weatherTUI/releases/download/v1.0.1/weatherTUI
+	
+	# downloads latest file
+        wget https://github.com/beee33/weatherTUI/releases/latest/download/weatherTUI
    	echo "downloaded files";
 	
 	if [ -f weatherTUI ] 
