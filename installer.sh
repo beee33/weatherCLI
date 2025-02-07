@@ -51,8 +51,15 @@ install_weather() {
         wget https://github.com/beee33/weatherTUI/releases/download/v1.0.1/weatherTUI
    	echo "downloaded files";
 	
-	mv weatherTUI /usr/bin/weatherTUI
-	echo "moved to bin";
+	if [ -f weatherTUI ] 
+	then
+       		mv weatherTUI /usr/bin/weatherTUI
+        	echo "moved to bin";		
+	else
+		echo "ERROR: weatherTUI is a directory, dont use installer in the same direcory as weaterCLI directory";
+		exit 1;
+	fi
+
 
 	# checks if data directory already exists
 	if [ -e /etc/weatherTUI ]
