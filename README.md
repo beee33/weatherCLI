@@ -1,10 +1,10 @@
-# weatherTUI
+# weatherezterm
 
-WeatherTUI is a Linux command line UI based application that shows the user the weather from the National Weather Service written in Python. 
-Because of this, WeatherTUI is only available in the United States, and its territories, However, the sun calculation is available for most of the places that share the same timezones as the United States, examples: Canada, Mexico and parts of western South America.
+weatherezterm is a Linux command line UI based application that shows the user the weather from the National Weather Service written in Python. 
+Because of this, weatherezterm is only available in the United States, and its territories, However, the sun calculation is available for most of the places that share the same timezones as the United States, examples: Canada, Mexico and parts of western South America.
 
 
-![WeatherTUI_image](https://github.com/user-attachments/assets/48d7198f-9ad0-4703-987c-cde9ec7c40e8)
+![weatherezterm_image](https://github.com/user-attachments/assets/48d7198f-9ad0-4703-987c-cde9ec7c40e8)
 
 
 Application for generating weather using data from NOAA
@@ -50,7 +50,7 @@ Temperature graphs:
 
 12 hour Precipitation probability graphs
 
-## How does WeatherTUI get its data?
+## How does weatherezterm get its data?
 
 The National Weather Service allows you to generate XML files showing weather data from a specific longitude and latitude. This program reads those XML files and presents them to the user as readable data. To calculate the sun positions, the program temporarily downloads the Javascript from NOAA’s old solar calculator: https://gml.noaa.gov/grad/solcalc/sunrise.html, and injects some javascript code to generate sun positions at time and location. It then uses js2py to compile the Javascript to Python.
 
@@ -97,7 +97,7 @@ Fedora
     
 #### download installer script:
 
-    wget https://raw.githubusercontent.com/beee33/WeatherTUI/main/installer.sh 
+    wget https://raw.githubusercontent.com/beee33/weatherezterm/main/installer.sh 
 #### run script:
 
     sudo sh installer.sh
@@ -109,7 +109,7 @@ TBD
 
 #### download file
 
-    wget https://raw.githubusercontent.com/beee33/WeatherTUI/main/main.py 
+    wget https://raw.githubusercontent.com/beee33/weatherezterm/main/main.py 
 
 #### install pyinstaller
 
@@ -123,23 +123,23 @@ For this program I would reccomend using python 3.10, as that is what version th
     pyinstaller main.py --onefile
 
 #### Copy the new binary to the bin directory so it can be accessed by users
-    sudo cp dist/main /usr/bin/WeatherTUI
+    sudo cp dist/main /usr/bin/weatherezterm
 
 #### Change perms so that any user can access it,but not modify it's code
-    sudo chmod 755 /usr/bin/WeatherTUI
+    sudo chmod 755 /usr/bin/weatherezterm
 
 #### make the data directory
-    sudo mkdir /etc/WeatherTUI
+    sudo mkdir /etc/weatherezterm
 
 #### change access to all users
 
-    sudo chmod 777 -R /etc/WeatherTUI
+    sudo chmod 777 -R /etc/weatherezterm
 
 **_*note this directory and its subdirectorys is intended to be accessible for all users_**
 
 #### if you only want people with sudo perms to access it:
 
-    sudo chmod 711 -R /etc/WeatherTUI
+    sudo chmod 711 -R /etc/weatherezterm
 
 
 
@@ -154,9 +154,9 @@ This should be replaced with your python version and the temp directory may be d
 
 
 
-## How does WeatherTUI know the location?
+## How does weatherezterm know the location?
 
-WeahterCLI uses OpenStreetMaps’s geocoding API to get latitude and longitude positions from user input. It converts the latitude and longitude into a url that has the XML data. This url is stored in “/etc/WeatherTUI/&lt;towns/zipcode/places&gt;/&lt;queryname&gt;/url.txt” an example is: “/etc/WeatherTUI/towns/Boston\ MA/url.txt”.  The data for the sun positions are only calculated once per day per location, and the output is put in a file so that the user doesn't have to recalculate the same sun data for each day. All of the urls and sun data is stored in “/etc/WeatherTUI/”
+WeahterCLI uses OpenStreetMaps’s geocoding API to get latitude and longitude positions from user input. It converts the latitude and longitude into a url that has the XML data. This url is stored in “/etc/weatherezterm/&lt;towns/zipcode/places&gt;/&lt;queryname&gt;/url.txt” an example is: “/etc/weatherezterm/towns/Boston\ MA/url.txt”.  The data for the sun positions are only calculated once per day per location, and the output is put in a file so that the user doesn't have to recalculate the same sun data for each day. All of the urls and sun data is stored in “/etc/weatherezterm/”
 
 
 
