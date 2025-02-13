@@ -34,11 +34,11 @@ def show_sun_data():
     cur_date= datetime.today().strftime('%m%d%Y')
 
     #adds that to a file that may or may not exist, if not it will be created later
-    cur_data_file = "/etc/weatherTUI"+url_siders+"/"+name_string+"/date_"+cur_date+".txt"
+    cur_data_file = "/etc/myweatherCLI"+url_siders+"/"+name_string+"/date_"+cur_date+".txt"
     
     #this section is so that any file that has the date_ signaute and is not of current date will be deleted
     #gets current directory files
-    dir_contents = os.listdir("/etc/weatherTUI"+url_siders+"/"+name_string) 
+    dir_contents = os.listdir("/etc/myweatherCLI"+url_siders+"/"+name_string) 
 
     #goes through each of them
     for file in dir_contents:
@@ -50,7 +50,7 @@ def show_sun_data():
             if file != "date_"+cur_date+".txt":
 
                 #deletes file
-                os.remove("/etc/weatherTUI/"+url_siders+"/"+name_string+"/"+file)
+                os.remove("/etc/myweatherCLI/"+url_siders+"/"+name_string+"/"+file)
                 
     #checks if file exists
     if os.path.isfile(cur_data_file):
@@ -569,7 +569,7 @@ if __name__ == '__main__':
         
         
         #new file for location
-        url_file = "/etc/weatherTUI"+url_siders+"/"+name_string+"/url.txt"
+        url_file = "/etc/myweatherCLI"+url_siders+"/"+name_string+"/url.txt"
 
         #checks if exists
         if os.path.isfile(url_file):
@@ -578,14 +578,14 @@ if __name__ == '__main__':
             url_file = open(url_file, "r")
             string = url_file.read().replace(" ","")
             if string == "":
-                shutil.rmtree("/etc/weatherTUI"+url_siders+"/"+name_string)
+                shutil.rmtree("/etc/myweatherCLI"+url_siders+"/"+name_string)
                 raise Exception("url file empty, so zip directory was deleted. Try again")
     
         else:
             print("generating "+args.zipcode)
 
             #will make a directory and add it
-            os.makedirs("/etc/weatherTUI"+url_siders+"/"+name_string)
+            os.makedirs("/etc/myweatherCLI"+url_siders+"/"+name_string)
             url_file = open(url_file, "w")
 
             #gets what type of request it is from
@@ -617,7 +617,7 @@ if __name__ == '__main__':
             if len(loc_json) == 0:
 
                 #deletes entry
-                shutil.rmtree("/etc/weatherTUI"+url_siders+"/"+name_string)
+                shutil.rmtree("/etc/myweatherCLI"+url_siders+"/"+name_string)
                 raise Exception("invalid place name/zipcode/POI")
 
             #gets the most likely entry
