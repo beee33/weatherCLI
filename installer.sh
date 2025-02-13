@@ -11,12 +11,12 @@ fi
 remove_weather_cli() {
 	
 	# checks if file exists if not tell the user, having not binary is not a catastrophic problem
-	if [ -e /usr/bin/myweatherCLI ]
+	if [ -e /usr/bin/weatherCLI ]
         then
 
 		# deletes file
-		rm /usr/bin/myweatherCLI;
-		echo "deleted: /usr/bin/myweatherCLI";
+		rm /usr/bin/weatherCLI;
+		echo "deleted: /usr/bin/weatherCLI";
 	else
 		echo "ERROR: data directory not found, so not deleting";
 	fi
@@ -24,17 +24,17 @@ remove_weather_cli() {
 	
 }
 
-# removes all of the config files within /etc/myweatherCLI
+# removes all of the config files within /etc/weatherCLI
 remove_weather_cli_files() {
 
 
 	# checks if file exists
-	if [ -e /etc/myweatherCLI ] 
+	if [ -e /etc/weatherCLI ] 
 	then 
-		rm -r /etc/myweatherCLI 
-		echo "deleted: /etc/myweatherCLI";
+		rm -r /etc/weatherCLI 
+		echo "deleted: /etc/weatherCLI";
 	else
-		echo "ERROR: myweatherCLI file not found, so not deleting";
+		echo "ERROR: weatherCLI file not found, so not deleting";
 	fi
 }
 
@@ -49,45 +49,45 @@ install_weather() {
 	echo "installing";
 	
 	# downloads latest file
-        wget https://github.com/beee33/myweatherCLI/releases/latest/download/myweatherCLI
+        wget https://github.com/beee33/weatherCLI/releases/latest/download/weatherCLI
    	echo "downloaded files";
 	
-	if [ -f myweatherCLI ] 
+	if [ -f weatherCLI ] 
 	then
-       		mv myweatherCLI /usr/bin/myweatherCLI
+       		mv weatherCLI /usr/bin/weatherCLI
         	echo "moved to bin";
-		chmod 755 /usr/bin/myweatherCLI		
-		echo "perms given to /usr/bin/myweatherCLI";
+		chmod 755 /usr/bin/weatherCLI		
+		echo "perms given to /usr/bin/weatherCLI";
 	else
-		echo "ERROR: myweatherCLI is a directory and a binary to be copied, dont run this program where myweatherCLI is in the same root path";
+		echo "ERROR: weatherCLI is a directory and a binary to be copied, dont run this program where weatherCLI is in the same root path";
 		exit 1;
 	fi
 
 
 	# checks if data directory already exists
-	if [ -e /etc/myweatherCLI ]
+	if [ -e /etc/weatherCLI ]
 	then
-		echo "directory /etc/myweatherCLI already exists";
+		echo "directory /etc/weatherCLI already exists";
 	else
 		# makes config directory
-		mkdir /etc/myweatherCLI
+		mkdir /etc/weatherCLI
 		echo "made data directory";
 
 		# gives 777 perms to directory(directory meant to be accessable by all users
-		chmod 777 -R /etc/myweatherCLI
+		chmod 777 -R /etc/weatherCLI
 		echo "perms given to file";
 	fi
 
 	# gives permitions to execute and read binary, but can only write if root
-	chmod 755 /usr/bin/myweatherCLI
+	chmod 755 /usr/bin/weatherCLI
 }
 
 # runs loop to so it will the user will have to put in the right input
 while true
 do
-	echo "myweatherCLI installer";
-	echo " 1) install myweatherCLI";
-	echo " 2) remove myweatherCLI";
+	echo "weatherCLI installer";
+	echo " 1) install weatherCLI";
+	echo " 2) remove weatherCLI";
 	echo " 3) exit";
 
 	# prints out a command prompt that reads to the install_type variable
@@ -113,14 +113,14 @@ if [ $install_type = "1" ]
 then	
 
 	# checks if binary exists, if so then tell user if they want to delete extra files
-	if [ -e /usr/bin/myweatherCLI ]
+	if [ -e /usr/bin/weatherCLI ]
 	then
 		# will run a loop untill the user selects the one of the options
                 while true
 			do
 
         		# reads user input
-			echo -n "myweatherCLI already exists, would you like to delete it? [Y/N]";
+			echo -n "weatherCLI already exists, would you like to delete it? [Y/N]";
         		read is_delete;
         	
 			if [ "$is_delete" = "Y" ] || [ "$is_delete" = "y" ]
@@ -144,7 +144,7 @@ if [ $install_type = "2" ]
 then
 
 	# checks if prevous configuration files exist in file system 
-	if [ -e /etc/myweatherCLI ]
+	if [ -e /etc/weatherCLI ]
 	then
 
 		# will loop untill user selects valid responce
