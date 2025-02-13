@@ -1,10 +1,10 @@
-# myweatherCLI
+# weatherCLI
 
-myweatherCLI is a Linux command line UI based application that shows the user the weather from the National Weather Service written in Python. 
-Because of this, myweatherCLI is only available in the United States, and its territories, However, the sun calculation is available for most of the places that share the same timezones as the United States, examples: Canada, Mexico and parts of western South America.
+weatherCLI is a Linux command line UI based application that shows the user the weather from the National Weather Service written in Python. 
+Because of this, weatherCLI is only available in the United States, and its territories, However, the sun calculation is available for most of the places that share the same timezones as the United States, examples: Canada, Mexico and parts of western South America.
 
 
-![myweatherCLI_image](https://github.com/user-attachments/assets/48d7198f-9ad0-4703-987c-cde9ec7c40e8)
+![weatherCLI_image](https://github.com/user-attachments/assets/48d7198f-9ad0-4703-987c-cde9ec7c40e8)
 
 
 Application for generating weather using data from NOAA
@@ -50,7 +50,7 @@ Temperature graphs:
 
 12 hour Precipitation probability graphs
 
-## How does myweatherCLI get its data?
+## How does weatherCLI get its data?
 
 The National Weather Service allows you to generate XML files showing weather data from a specific longitude and latitude. This program reads those XML files and presents them to the user as readable data. To calculate the sun positions, the program temporarily downloads the Javascript from NOAA’s old solar calculator: https://gml.noaa.gov/grad/solcalc/sunrise.html, and injects some javascript code to generate sun positions at time and location. It then uses js2py to compile the Javascript to Python.
 
@@ -97,7 +97,7 @@ Fedora
     
 #### download installer script:
 
-    wget https://raw.githubusercontent.com/beee33/myweatherCLI/main/installer.sh 
+    wget https://raw.githubusercontent.com/beee33/weatherCLI/main/installer.sh 
 #### run script:
 
     sudo sh installer.sh
@@ -109,7 +109,7 @@ TBD
 
 #### download file
 
-    wget https://raw.githubusercontent.com/beee33/myweatherCLI/main/main.py 
+    wget https://raw.githubusercontent.com/beee33/weatherCLI/main/main.py 
 
 #### install pyinstaller
 
@@ -119,28 +119,28 @@ TBD
 <br>
 For this program I would reccomend using python 3.10, as that is what version this program is written for. 
 
-cd into myweatherCLI directory
+cd into weatherCLI directory
 #### compile to standalone binary
     pyinstaller main.py --onefile
 
 #### Copy the new binary to the bin directory so it can be accessed by users
-    sudo cp dist/main /usr/bin/myweatherCLI
+    sudo cp dist/main /usr/bin/weatherCLI
 
 #### Change perms so that any user can access it,but not modify it's code
-    sudo chmod 755 /usr/bin/myweatherCLI
+    sudo chmod 755 /usr/bin/weatherCLI
 
 #### make the data directory
-    sudo mkdir /etc/myweatherCLI
+    sudo mkdir /etc/weatherCLI
 
 #### change access to all users
 
-    sudo chmod 777 -R /etc/myweatherCLI
+    sudo chmod 777 -R /etc/weatherCLI
 
 **_*note this directory and its subdirectorys is intended to be accessible for all users_**
 
 #### if you only want people with sudo perms to access it:
 
-    sudo chmod 711 -R /etc/myweatherCLI
+    sudo chmod 711 -R /etc/weatherCLI
 
 
 
@@ -155,9 +155,9 @@ This should be replaced with your python version and the temp directory may be d
 
 
 
-## How does myweatherCLI know the location?
+## How does weatherCLI know the location?
 
-WeahterCLI uses OpenStreetMaps’s geocoding API to get latitude and longitude positions from user input. It converts the latitude and longitude into a url that has the XML data. This url is stored in “/etc/myweatherCLI/&lt;towns/zipcode/places&gt;/&lt;queryname&gt;/url.txt” an example is: “/etc/myweatherCLI/towns/Boston\ MA/url.txt”.  The data for the sun positions are only calculated once per day per location, and the output is put in a file so that the user doesn't have to recalculate the same sun data for each day. All of the urls and sun data is stored in “/etc/myweatherCLI/”
+WeahterCLI uses OpenStreetMaps’s geocoding API to get latitude and longitude positions from user input. It converts the latitude and longitude into a url that has the XML data. This url is stored in “/etc/weatherCLI/&lt;towns/zipcode/places&gt;/&lt;queryname&gt;/url.txt” an example is: “/etc/weatherCLI/towns/Boston\ MA/url.txt”.  The data for the sun positions are only calculated once per day per location, and the output is put in a file so that the user doesn't have to recalculate the same sun data for each day. All of the urls and sun data is stored in “/etc/weatherCLI/”
 
 
 
@@ -188,4 +188,4 @@ WeahterCLI uses OpenStreetMaps’s geocoding API to get latitude and longitude p
 <video autoplay src='https://github.com/user-attachments/assets/e87a1e42-ea32-45a8-bb17-eb480c3a8ebd'></video>
 
 ### *video only edited to speed up typing (program running time is at real time speed)
-### *name orignaly was weatherCLI
+
