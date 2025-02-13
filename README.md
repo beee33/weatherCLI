@@ -119,6 +119,7 @@ TBD
 <br>
 For this program I would reccomend using python 3.10, as that is what version this program is written for. 
 
+cd into myweatherCLI directory
 #### compile to standalone binary
     pyinstaller main.py --onefile
 
