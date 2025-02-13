@@ -59,7 +59,7 @@ install_weather() {
 		chmod 755 /usr/bin/myweatherCLI		
 		echo "perms given to /usr/bin/myweatherCLI";
 	else
-		echo "ERROR: myweatherCLI is a directory, dont use installer in the same direcory as weaterCLI directory";
+		echo "ERROR: myweatherCLI is a directory and a binary to be copied, dont run this program where myweatherCLI is in the same root path";
 		exit 1;
 	fi
 
