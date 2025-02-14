@@ -117,11 +117,62 @@ TBD
 
 *Note, you may have to use a virtual enviroment for some systems. You can use something like pyenv to create instances of python with diffrent versions: https://github.com/pyenv/pyenv 
 <br>
-For this program I would reccomend using python 3.10, as that is what version this program is written for. 
+For this program I would reccomend using python 3.10, as that is what version this program is written for. If not, try to rename all instances of it to your python version
 
 cd into weatherCLI directory
-#### compile to standalone binary
+
+
+#### Recommended: use python venv 
+
+Create new virtual enviroment using python's venv
+
+    python3 -m venv <name>
+
+Enter venv
+
+    
+    source <name>/bin/activate
+*Note: if venv works, your shell should have (&lt;name&gt;) in prompt
+Install dependencys
+
+    python3 -m pip install -r requirements.txt
+<br>
+<br>
+
+#### Not recommended: run without venv
+:exclamation: some Operating Systems eg: Debian, dont like you to install packages in the default python environment, as it may override system packages that are needed. I have bricked a VM by doing this.
+<br>
+<br>
+Install dependencys
+
+    python3 -m pip install -r requirements.txt
+
+
+<br>
+<br>
+
+#### compile to standalone binary if you use venv
+
+This adds the new venv site packages path to pyinstaller, so it can use it.
+    
+    pyinstaller main.py --onefile --paths "<name>/lib/python3.10/site-packages"
+
+
+Leave virtual enviroment
+
+    deactivate
+
+<br>
+<br>
+
+#### compile to standalone binary if you dont use venv
+
     pyinstaller main.py --onefile
+
+<br>
+<br>
+<br>
+<br>
 
 #### Copy the new binary to the bin directory so it can be accessed by users
     sudo cp dist/main /usr/bin/weatherCLI
@@ -145,6 +196,8 @@ cd into weatherCLI directory
 
 
 #### potental problems with compiling
+
+
 
 if you get the error: "[PYI-1890462:ERROR] Failed to load Python shared library '/tmp/_MEIWYQO9N/libpython3.10.so': dlopen: /tmp/_MEIWYQO9N/libpython3.10.so: cannot open shared object file: No such file or directory"
 
