@@ -20,8 +20,29 @@ import textwrap
 import os
 import json
 import html
-import js2py
 
+
+#when called, it will check if date is within a specific format eg 12h or 24h
+def convert_to_used_tz(time_to_change,used_type):
+
+    
+    split_time = time_to_change.split(":")
+    hours = int(split_time[0])
+    mins = str(split_time[1])
+
+    match used_type:
+        case "24h":
+            return time_to_change
+        case "12h":
+            if hours >= 13:
+                return str(hours-12)+":"+mins+"PM"
+            elif hours >= 12:
+                return str(hours)+":"+mins+"PM"
+            else:
+                return time_to_change+"AM"
+        case _:
+            raise Exception("unknown hour format")
+    
 
 #generates the sun data bt simulating a browser action to NOAA's website
 def show_sun_data():
@@ -56,56 +77,40 @@ def show_sun_data():
     if os.path.isfile(cur_data_file):
 
         #reads file and gets a list of data
-        sun_file_data = open(cur_data_file, "r").read().split(" ")
+        sun_file_data = open(cur_data_file, "r").read().split("_")
 
         #puts data into varables
         sun_rise_time = sun_file_data[0]
         solar_noon_time = sun_file_data[1]
         sun_set_time = sun_file_data[2]
+        moon_cycle = sun_file_data[3]
 
     else:    
+        
+        #+"&dst=true"
+        sun_calc_url = "https://aa.usno.navy.mil/api/rstt/oneday?date="+datetime.today().strftime('%Y-%m-%d')+"&coords="+str(latitude)+","+str(longitude)+"&tz="+str(utc_offset)
 
-        #gets the entire js file from the html file, then gets its text
-        script_text  = html.unescape(BeautifulSoup(requests.get("https://gml.noaa.gov/grad/solcalc/sunrise.html").text, "html.parser").find_all("script")[1].text)
-
-        #this is a function that will be parced into later that gets the date 
-        calc_julian_day = "calcJD("+datetime.today().strftime('%Y,%m,%d')+")"
-
-        #scrips used to calcualtate the times then prints it
-        script_text += "console.log(timeStringShortAMPM((calcSunriseUTC("+calc_julian_day+", "+str(latitude)+", "+str(longitude)+") - (60 * "+str(utc_offset)+")), "+calc_julian_day+") );"
-        script_text += "console.log(timeString(calcSolNoonUTC(calcTimeJulianCent("+calc_julian_day+"), "+str(longitude)+") - (60 * "+str(utc_offset)+" )));"
-        script_text += "console.log(timeStringShortAMPM((calcSunsetUTC("+calc_julian_day+", "+str(latitude)+", "+str(longitude)+") - (60 * "+str(utc_offset)+" )), "+calc_julian_day+"));"
-
-        #gets the print data from before
-        save_out = sys.stdout
-
-        #creates a new stringio object to get the print statemetns
-        result = StringIO()
-
-        #clears the stdout with new file
-        sys.stdout = result
-
-        #parses the python into javascript then runs it
-        js2py.eval_js(script_text)
-
-        #sets to the old data
-        sys.stdout = save_out
-
-        #formats strings into a list to be decontrsuted
-        group_data = result.getvalue().replace("\n"," ").replace("\""," ").replace("\'\'"," ").replace("\'","").split()
+        solar_info = json.loads(requests.get(sun_calc_url).text)
+    
 
         #gets data from list
-        sun_rise_time = group_data[0]
-        solar_noon_time = group_data[1]
-        sun_set_time = group_data[2]
+        sun_rise_time = solar_info["properties"]["data"]["sundata"][1]["time"].replace("ST","").replace(" ","")
+        solar_noon_time = solar_info["properties"]["data"]["sundata"][2]["time"].replace("ST","").replace(" ","")
+        sun_set_time = solar_info["properties"]["data"]["sundata"][3]["time"].replace("ST","").replace(" ","")
+        moon_cycle = solar_info["properties"]["data"]["curphase"]
 
         #opens the current time file and writes
         url_file = open(cur_data_file, "w")
         
         #adds the data to file
-        url_file.write(sun_rise_time+" "+solar_noon_time+" "+sun_set_time)
+        url_file.write(sun_rise_time+"_"+solar_noon_time+"_"+sun_set_time+"_"+moon_cycle)
         url_file.close()
     
+    #checks if right time format, if not, it will convert times to that format 
+    sun_rise_time = convert_to_used_tz(sun_rise_time,hours_type)
+    solar_noon_time = convert_to_used_tz(solar_noon_time,hours_type)
+    sun_set_time = convert_to_used_tz(sun_set_time,hours_type)
+
     #words that goe with the data
     sun_rise = "Sunrise:"
     solar_noon = "Solar Noon(Sun's peak):"
@@ -493,6 +498,10 @@ if __name__ == '__main__':
     print_graph_data = False
     print_warn_data = False
 
+    
+    #default time format
+    hours_type = "12h"
+
     #timezones in the United States and it's territorys
     timezones = {
         "est": -5,
@@ -521,11 +530,23 @@ if __name__ == '__main__':
         prog='PROG',
         formatter_class=argparse.RawDescriptionHelpFormatter,
         description=textwrap.dedent('''\
+            
+            This application is designed to calculate the sun and weather from a specific location using NOAA and AAD. 
+            
+            !important! This program only works for places within the United States and it's Territorys
+
+            
+            
             Application for generating weather using data from NOAA
             -------------------------------------------------------
             https://www.noaa.gov/
             https://weather.gov/
-            https://gml.noaa.gov/grad/solcalc/sunrise.html
+
+
+            API for sun information from Astronomical Applications Department
+            -----------------------------------------------------------------
+            https://aa.usno.navy.mil/data/api
+            https://aa.usno.navy.mil/api/
 
             Geocoding for latitude and longitude using data from OpenStreetMap
             ------------------------------------------------------------------
@@ -537,18 +558,34 @@ if __name__ == '__main__':
                 \"poi:Rochester Insitute of Technology\"
                 \"zip:14623\"
                 \"town:Rochester NY\"
+             
+            Default time format: 12 hours
 
-            !This program only works for places within the United States and it's Territorys!
         '''))
     parser.add_argument("zipcode", type=str, help="town or city name shoud be the query \"town:<town name> <State>\" zipcodes should be \"zip:<zipcode>\" and points of intrest should be \"poi:<placename>\"")
     parser.add_argument("-t", "--type", type=str, help="how complatated the data will be: simple | all | onlywarnings | onlysun<Timezone> eg: onlysunEST or onlysunCST",default="All")
     parser.add_argument("-s", "--sun", type=str, help="shows sun data",default="none")
     parser.add_argument("-i", "--ignoreSizeRequirements", help="The program will ignore the width of the display", action='store_true')
-    
+    parser.add_argument("-t12", "--time12h", help="12h clock", action='store_true')
+    parser.add_argument("-t24", "--time24h", help="24h clock", action='store_true')
+
+
+
+
     
     #runs arguments
     args = parser.parse_args()
 
+
+    if args.time12h and args.time24h:
+        raise Exception("Time format must be t12 or t24 hours")
+    
+    if args.time12h:
+        hours_type = "12h"
+
+    if args.time24h:
+        hours_type = "24h"
+    
     #trys to see if contains a website, 
     if args.zipcode.count("https://") == 1:
         if args.zipcode.count("https://forecast.weather.gov/MapClick.php") == 1:
