@@ -107,20 +107,15 @@ TBD
 
 ### Build from source:
 
-#### download file
+#### download repo
 
-    wget https://raw.githubusercontent.com/beee33/weatherCLI/main/main.py 
+    git clone "https://github.com/beee33/weatherCLI"
 
-#### install pyinstaller
+#### Configure venv
 
-    pip install pyinstaller
+#### cd into weatherCLI directory
 
-*Note, you may have to use a virtual enviroment for some systems. You can use something like pyenv to create instances of python with diffrent versions: https://github.com/pyenv/pyenv 
-<br>
-For this program I would reccomend using python 3.10, as that is what version this program is written for. If not, try to rename all instances of it to your python version
-
-cd into weatherCLI directory
-
+    cd weatherCLI
 
 #### Recommended: use python venv 
 
@@ -150,6 +145,22 @@ Install dependencys
 
 <br>
 <br>
+
+#### install pyinstaller
+
+    pip install pyinstaller
+
+or
+
+    python3 -m pip install pyinstaller
+
+*Note, you may have to use a virtual enviroment for some systems. You can use something like pyenv to create instances of python with diffrent versions: https://github.com/pyenv/pyenv 
+<br>
+For this program I would reccomend using python 3.10, as that is what version this program is written for. If not, try to rename all instances of it to your python version
+
+
+
+
 
 #### compile to standalone binary if you use venv
 
