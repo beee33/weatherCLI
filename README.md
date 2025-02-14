@@ -102,8 +102,16 @@ Fedora
 
     sudo sh installer.sh
 
-### just run python file instead:
-TBD
+### only run python file instead:
+
+#### 1. download repo and download dependencies
+
+[Follow Build from source instructuions to step 4](#build-from-source)
+
+
+#### 2. Run python fille
+
+    python3 main.py
 
 ### Build from source:
 
