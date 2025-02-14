@@ -77,7 +77,7 @@ The National Weather Service allows you to generate XML files showing weather da
 
 ### from installer:
 
-#### Dependencys: wget
+#### 1. Dependencys: wget
 
 Can be installed from almost all package managers:
 
@@ -95,10 +95,10 @@ Fedora
     
 *may already be installed
     
-#### download installer script:
+#### 2. download installer script:
 
     wget https://raw.githubusercontent.com/beee33/weatherCLI/main/installer.sh 
-#### run script:
+#### 3. run script:
 
     sudo sh installer.sh
 
@@ -107,17 +107,30 @@ TBD
 
 ### Build from source:
 
-#### download repo
+#### 1. Install git
+
+Instructions to install git are on: [Git's website](<https://git-scm.com/book/en/v2/Getting-Started-Installing-Git>)
+however you can just use:
+
+Debian/Ubuntu/Mint:
+
+    sudo apt install git
+
+Fedora
+
+    sudo dnf install git
+
+#### 2. download repo
 
     git clone "https://github.com/beee33/weatherCLI"
 
 #### Configure venv
 
-#### cd into weatherCLI directory
+#### 3. cd into weatherCLI directory
 
     cd weatherCLI
 
-#### Recommended: use python venv 
+#### 4a. Recommended: use python venv 
 
 Create new virtual enviroment using python's venv
 
@@ -134,7 +147,7 @@ Install dependencys
 <br>
 <br>
 
-#### Not recommended: run without venv
+#### 4b. Not recommended: run without venv
 :exclamation: some Operating Systems eg: Debian, dont like you to install packages in the default python environment, as it may override system packages that are needed. I have bricked a VM by doing this.
 <br>
 <br>
@@ -146,7 +159,7 @@ Install dependencys
 <br>
 <br>
 
-#### install pyinstaller
+#### 5. install pyinstaller
 
     pip install pyinstaller
 
@@ -162,9 +175,9 @@ For this program I would reccomend using python 3.10, as that is what version th
 
 
 
-#### compile to standalone binary if you use venv
+#### 6. compile to standalone binary if you use venv
 
-This adds the new venv site packages path to pyinstaller, so it can use it.
+This adds the new venv site packages path to pyinstaller, so it can use it. You should replace python3.10 with your python version eg python3.11
     
     pyinstaller main.py --onefile --paths "<name>/lib/python3.10/site-packages"
 
@@ -176,7 +189,7 @@ Leave virtual enviroment
 <br>
 <br>
 
-#### compile to standalone binary if you dont use venv
+#### 7. compile to standalone binary if you dont use venv
 
     pyinstaller main.py --onefile
 
@@ -185,22 +198,22 @@ Leave virtual enviroment
 <br>
 <br>
 
-#### Copy the new binary to the bin directory so it can be accessed by users
+#### 8. Copy the new binary to the bin directory so it can be accessed by users
     sudo cp dist/main /usr/bin/weatherCLI
 
-#### Change perms so that any user can access it,but not modify it's code
+#### 9. Change perms so that any user can access it,but not modify it's code
     sudo chmod 755 /usr/bin/weatherCLI
 
-#### make the data directory
+#### 10. make the data directory
     sudo mkdir /etc/weatherCLI
 
-#### change access to all users
+#### 11a. change access to all users
 
     sudo chmod 777 -R /etc/weatherCLI
 
 **_*note this directory and its subdirectorys is intended to be accessible for all users_**
 
-#### if you only want people with sudo perms to access it:
+#### 11b. if you only want people with sudo perms to access it:
 
     sudo chmod 711 -R /etc/weatherCLI
 
