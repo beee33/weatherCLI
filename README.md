@@ -23,10 +23,13 @@ https://aa.usno.navy.mil/api/
 
 Geocoding for latitude and longitude using data from OpenStreetMap
 ------------------------------------------------------------------
-https://openstreetmap.org/copyright   
-<br>
+
+
 https://nominatim.openstreetmap.org/
 <br>
+https://openstreetmap.org/copyright   
+<br>
+
 
 ## What kind of data can the application show:
 
