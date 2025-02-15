@@ -13,14 +13,20 @@ https://www.noaa.gov/
 <br>
 https://weather.gov/
 <br>
-https://gml.noaa.gov/grad/solcalc/sunrise.html
+
+API for sun information from Astronomical Applications Department
+-----------------------------------------------------------------
+https://aa.usno.navy.mil/data/api
+<br>
+https://aa.usno.navy.mil/api/
+<br>
 
 Geocoding for latitude and longitude using data from OpenStreetMap
 ------------------------------------------------------------------
 https://openstreetmap.org/copyright   
 <br>
 https://nominatim.openstreetmap.org/
-
+<br>
 
 ## What kind of data can the application show:
 
@@ -52,7 +58,7 @@ Temperature graphs:
 
 ## How does weatherCLI get its data?
 
-The National Weather Service allows you to generate XML files showing weather data from a specific longitude and latitude. This program reads those XML files and presents them to the user as readable data. To calculate the sun positions, the program temporarily downloads the Javascript from NOAA’s old solar calculator: https://gml.noaa.gov/grad/solcalc/sunrise.html, and injects some javascript code to generate sun positions at time and location. It then uses js2py to compile the Javascript to Python.
+The National Weather Service allows you to generate XML files showing weather data from a specific longitude and latitude. This program reads those XML files and presents them to the user as readable data. To get the sun positions, the program uses the US Navy's API for getting sun info expressed in json, and prints out on screen.
 
 ## Supported operating systems
 | OS           | Supported?                     |
