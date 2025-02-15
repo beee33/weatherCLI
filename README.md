@@ -58,7 +58,7 @@ Temperature graphs:
 
 ## How does weatherCLI get its data?
 
-The National Weather Service allows you to generate XML files showing weather data from a specific longitude and latitude. This program reads those XML files and presents them to the user as readable data. To get the sun positions, the program uses the US Navy's API for getting sun info expressed in json, and prints out on screen.
+The National Weather Service allows you to generate XML files showing weather data from a specific longitude and latitude. This program reads those XML files and presents them to the user as readable data. To get the sun positions, the program uses the US Navy's API for getting sun info expressed in json, and prints the result out on terminal.
 
 ## Supported operating systems
 | OS           | Supported?                     |
