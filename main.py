@@ -130,44 +130,51 @@ def show_sun_data():
     else:
         connected = "none"
 
+    data_line = "║ "+sun_rise+" "+ sun_rise_time+" ║ "+solar_noon+" "+ solar_noon_time+" ║ "+ sun_set+" "+ sun_set_time + " ║ Moon Cycle: " + moon_cycle + " "+moon_emoji.get(moon_cycle.lower(),"❓")
+    res_line_data = data_line + (full_width - len(data_line)-2)*" "+"║ \n"
+
+    moon_cycle = " "+ moon_cycle
+    
     #generates the bars based on connection
     match connected:
         case "top":
-            line = "╠══" + len(sun_rise+" "+ sun_rise_time)*"═" +"╦══" + len(solar_noon+" "+ solar_noon_time)*"═"+"╦"
+            line = "╠══" + len(sun_rise+" "+ sun_rise_time)*"═" +"╦══" + len(solar_noon+" "+ solar_noon_time)*"═"+"╦" + (1+len(moon_cycle))*"═" + "╦"
             line += (full_width - len(line) -2)*"═" + "╣"
             res_line += line +  "\n"
-            line = "║ "+sun_rise+" "+ sun_rise_time+" ║ "+solar_noon+" "+ solar_noon_time+" ║ "+ sun_set+" "+ sun_set_time
-            res_line += line + (full_width - len(line)-2)*" "+"║ \n"
-            line = "╚══" + len(sun_rise+" "+ sun_rise_time)*"═" +"╩══" + len(solar_noon+" "+ solar_noon_time)*"═"+"╩"
+            
+            res_line += res_line_data
+            
+            line = "╚══" + len(sun_rise+" "+ sun_rise_time)*"═" +"╩══" + len(solar_noon+" "+ solar_noon_time)*"═"+"╩" + (1+len(moon_cycle))*"═" + "╩"
             line += (full_width - len(line) -2)*"═" + "╝"
             res_line += line +"\n"
             
         case "bottom":
-            line = "╔══" + len(sun_rise+" "+ sun_rise_time)*"═" +"╦══" + len(solar_noon+" "+ solar_noon_time)*"═"+"╦"
+            line = "╔══" + len(sun_rise+" "+ sun_rise_time)*"═" +"╦══" + len(solar_noon+" "+ solar_noon_time)*"═"+"╦" + (1+len(moon_cycle))*"═" + "╦"
             line += (full_width - len(line) -2)*"═" + "╗"
             res_line += line +  "\n"
-            line = "║ "+sun_rise+" "+ sun_rise_time+" ║ "+solar_noon+" "+ solar_noon_time+" ║ "+ sun_set+" "+ sun_set_time
-            res_line += line + (full_width - len(line)-2)*" "+"║" + "\n"
-            line = "╠══" + len(sun_rise+" "+ sun_rise_time)*"═" +"╩══" + len(solar_noon+" "+ solar_noon_time)*"═"+"╩"
+    
+            res_line += res_line_data
+            
+            line = "╠══" + len(sun_rise+" "+ sun_rise_time)*"═" +"╩══" + len(solar_noon+" "+ solar_noon_time)*"═"+"╩" + (1+len(moon_cycle))*"═" + "╩"
             line += (full_width - len(line) -2)*"═" + "╣"
             res_line += line +"\n"
     
         case "both":
-            line = "╠══" + len(sun_rise+" "+ sun_rise_time)*"═" +"╦══" + len(solar_noon+" "+ solar_noon_time)*"═"+"╦"
+            line = "╠══" + len(sun_rise+" "+ sun_rise_time)*"═" +"╦══" + len(solar_noon+" "+ solar_noon_time)*"═"+"╦" + (1+len(moon_cycle))*"═" + "╦"
             line += (full_width - len(line) -2)*"═" + "╣"
             res_line += line +  "\n"
-            line = "║ "+sun_rise+" "+ sun_rise_time+" ║ "+solar_noon+" "+ solar_noon_time+" ║ "+ sun_set+" "+ sun_set_time
-            res_line += line + (full_width - len(line)-2)*" "+"║" +"\n"
-            line = "╠══" + len(sun_rise+" "+ sun_rise_time)*"═" +"╩══" + len(solar_noon+" "+ solar_noon_time)*"═"+"╩"
+
+            res_line += res_line_data
+            
+            line = "╠══" + len(sun_rise+" "+ sun_rise_time)*"═" +"╩══" + len(solar_noon+" "+ solar_noon_time)*"═"+"╩" + (1+len(moon_cycle))*"═" + "╩"
             line += (full_width - len(line) -2)*"═" + "╣"
             res_line += line +"\n"
         case "none":
-            line = "╔══" + len(sun_rise+" "+ sun_rise_time)*"═" +"╦══" + len(solar_noon+" "+ solar_noon_time)*"═"+"╦"
+            line = "╔══" + len(sun_rise+" "+ sun_rise_time)*"═" +"╦══" + len(solar_noon+" "+ solar_noon_time)*"═"+"╦" + (1+len(moon_cycle))*"═" + "╦"
             line += (full_width - len(line) -2)*"═" + "╗"
             res_line += line +  "\n"
-            line = "║ "+sun_rise+" "+ sun_rise_time+" ║ "+solar_noon+" "+ solar_noon_time+" ║ "+ sun_set+" "+ sun_set_time
-            res_line += line + (full_width - len(line)-2)*" "+"║" +"\n"
-            line = "╚══" + len(sun_rise+" "+ sun_rise_time)*"═" +"╩══" + len(solar_noon+" "+ solar_noon_time)*"═"+"╩"
+            res_line += res_line_data
+            line = "╚══" + len(sun_rise+" "+ sun_rise_time)*"═" +"╩══" + len(solar_noon+" "+ solar_noon_time)*"═"+"╩" + (1+len(moon_cycle))*"═" + "╩"
             line += (full_width - len(line) -2)*"═" + "╝"
             res_line += line +"\n"
     return res_line 
@@ -850,7 +857,18 @@ if __name__ == '__main__':
             "This Afternoon":"TA"
         }
     
-    
+
+    moon_emoji = {
+        "new moon":"🌑",
+        "waxing crescent":"🌒",
+        "first quarter":"🌓",
+        "waxing gibbous":"🌔",
+        "full moon": "🌕",
+        "waning gibbous":"🌖",
+        "last quarter":"🌗",
+        "waning crescent":"🌘"
+    }
+
     #calculates wanted width for each bar
     string_width = 0
         
