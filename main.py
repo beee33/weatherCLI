@@ -1,7 +1,5 @@
 #!/usr/bin/python3
 
-
-
 from colorama import Fore, Back, Style
 from decimal import Decimal, getcontext
 from termcolor import colored, cprint
@@ -20,8 +18,234 @@ import textwrap
 import os
 import json
 import html
+import pytz
+
+#gets the worded forecast, ie: "partly sunny", and converts it into a array of bash color codes to be viewed in the terminal
+def turn_word_data_to_type(worded_data_in):
+
+    #wether this day will have a background, no precipitation. Examples of True will be: Mostly Cloudy, and False will be: Snow Showers
+    #each index is quarter of a 24 hours
+    type_data = []
+
+    #a 2d list of days, wich contains a list of color codes
+    empty_show = []
+
+    #makes a array of color codes, and handels the distribution via percentage
+    def make_striped_graph(precip_per,main_color,sec_color):
+        spotted = []
+
+        #checks if both are the same color if so it will just make a list of single colors
+        if main_color == sec_color:
+            
+            for i in range(11):
+                spotted.append(main_color)
+            return spotted
+        else: 
+            #if not then it will return a list of the distribution of the diffrent colors
+            match precip_per:
+                case 70:
+                    return [main_color,main_color,sec_color,main_color,main_color,sec_color,main_color,main_color,sec_color,main_color,main_color]
+                case 50:
+                    return [main_color,sec_color,main_color,sec_color,main_color,sec_color,main_color,sec_color,main_color,sec_color,main_color]
+                case 30:
+                    return [sec_color,sec_color,main_color,sec_color,sec_color,main_color,sec_color,sec_color,main_color,sec_color,sec_color]
+            raise Exception("precentage is not valid")
+            
+    # primary color, secondary color, percent usage for primary, will be used when 0% percip
+    #can either be 70 50 or 30
+    word_to_color = {
+        "None":[UNK_CONST,UNK_CONST,100,True],
+        "Chance Snow Showers": [SNOW_CONST,SNOW_CONST,100,False],
+        "Snow Showers Likely": [SNOW_CONST,SNOW_CONST,100,False],
+        "Heavy Snow":[SNOW_CONST,SNOW_CONST,100,False],
+        "Mostly Cloudy":[CLOUD_CONST,CLEAR_CONST,70,True],
+        "Partly Sunny":[CLOUD_CONST,CLEAR_CONST,70,True],
+        "Chance Rain/Snow":[RAIN_CONST,SNOW_CONST,50,False],
+        "Snow and Blowing Snow":[SNOW_CONST,SNOW_CONST,100,False],
+        "Chance Snow Showers and Breezy":[SNOW_CONST,WIND_CONST,100,False],
+        "Snow Showers Likely and Areas Blowing Snow":[SNOW_CONST,SNOW_CONST,100,False],
+        "Chance Snow":[SNOW_CONST,SNOW_CONST,100,False],
+        "Snow Showers":[SNOW_CONST,SNOW_CONST,100,False],
+        "Snow":[SNOW_CONST,SNOW_CONST,100,False],
+        "Slight Chance Snow Showers":[SNOW_CONST,SNOW_CONST,100,False],
+        "Chance Showers":[RAIN_CONST,RAIN_CONST,100,False],
+        "Isolated Showers":[RAIN_CONST,RAIN_CONST,100,False],
+        "Mostly Clear":[CLEAR_CONST,CLOUD_CONST,70,True],
+        "Sunny and Breezy":[CLEAR_CONST,WIND_CONST,100,True],
+        "Sunny":[CLEAR_CONST,CLEAR_CONST,100,True],
+        "Slight Chance Snow":[SNOW_CONST,SNOW_CONST,100,False],
+        "Snow Likely":[SNOW_CONST,SNOW_CONST,100,False],
+        "Mostly Sunny":[CLEAR_CONST,CLOUD_CONST,70,True],
+        "Partly Cloudy":[CLEAR_CONST,CLOUD_CONST,70,True],
+        "Cold":[COLD_CONST,COLD_CONST,100,True],
+        "Rain":[RAIN_CONST,RAIN_CONST,100,False],
+        "Slight Chance Rain":[RAIN_CONST,RAIN_CONST,100,False],
+        "Rain Likely":[RAIN_CONST,RAIN_CONST,100,False],
+        "Chance Rain":[RAIN_CONST,RAIN_CONST,100,False],
+        "Cloudy":[CLOUD_CONST,CLOUD_CONST,100,True],
+        "Chance Snow and Patchy Blowing Snow":[SNOW_CONST,SNOW_CONST,100,False],
+        "Snow and Patchy Blowing Snow":[SNOW_CONST,SNOW_CONST,100,False],
+        "Rain/Snow":[RAIN_CONST,SNOW_CONST,50,False],
+        "Slight Chance Showers":[RAIN_CONST,RAIN_CONST,50,False],
+        "Decreasing Clouds":[CLOUD_CONST,CLEAR_CONST,50,True],
+        "Increasing Clouds":[CLOUD_CONST,CLEAR_CONST,50,True],
+        "Clouds":[CLOUD_CONST,CLOUD_CONST,100,True],
+        "Clear":[CLEAR_CONST,CLEAR_CONST,100,True],
+        "Showers":[RAIN_CONST,RAIN_CONST,100,False],
+        "Showers Likely":[RAIN_CONST,RAIN_CONST,100,False],
+        "Scattered Showers":[RAIN_CONST,RAIN_CONST,100,False],
+        "Isolated Showers and Breezy":[RAIN_CONST,WIND_CONST,100,False],
+        "Isolated Showers":[RAIN_CONST,RAIN_CONST,100,False],
+        "Mostly Cloudy and Breezy":[CLEAR_CONST,WIND_CONST,100,True],
+        "Partly Sunny and Breezy":[CLEAR_CONST,WIND_CONST,100,True],
+        "Thunderstorms":[THUNDER_CONST,THUNDER_CONST,100,False],
+        "Severe Thunderstorms":[SEV_THUNDER_CONST,SEV_THUNDER_CONST,100,False],
+        "Sleet":[SLEET_CONST,SLEET_CONST,100,False],
+        "Freezing Rain":[FREEZE_CONST,FREEZE_CONST,100,False],
+        "Scattered Flurries":[CLOUD_CONST,CLEAR_CONST,50,True],
+        "Flurries":[CLOUD_CONST,CLEAR_CONST,50,True],
+        "Fog":[FOG_CONST,FOG_CONST,100,True],
+        "Patchy Fog":[FOG_CONST,FOG_CONST,50,True],
+        "Haze":[HAZE_CONST,HAZE_CONST,100,True],
+        "Patchy Drizzle":[RAIN_CONST,RAIN_CONST,100,False],
+        "Drizzle":[RAIN_CONST,RAIN_CONST,100,False],
+        "Patchy Drizzle and Patchy Fog":[RAIN_CONST,FOG_CONST,50,True],
+        "Showers and Breezy":[RAIN_CONST,WIND_CONST,50,False],
+        "Rain and Patchy Fog":[RAIN_CONST,FOG_CONST,50,False],
+        "Chance Rain and Areas Dense Fog":[RAIN_CONST,FOG_CONST,50,False],
+        "Areas Dense Fog":[FOG_CONST,FOG_CONST,100,True],
+        "Chance Rain and Patchy Fog":[RAIN_CONST,FOG_CONST,50,False]
+    }
+
+    #gets a period worth of colors, if the day was not regestered in word_to_color. It will try to get the closest approximation
+    def gen_color_from_unk_list(word):
+        
+        split_word = word.split(" ")
+
+        split_size = len(split_word) -1
+        index = 0
 
 
+        #goes through the entire array, until the seperated word is in the list
+        while True:
+
+            #checks if the index is in the dictonary
+            if split_word[index] in word_to_color:
+                print("WARN: unknown weather type: \""+word+"\" used most similar item using \""+split_word[index]+"\"")
+
+                #adds it to the constant usage list for both early and late period, 
+                const_usage[word_to_color[split_word[index]][0]][0] += 1
+                const_usage[word_to_color[split_word[index]][1]][0] += 1
+                return word_to_color[split_word[index]]
+
+            # will return an unknown bar if the index is at the end of the list
+            if split_size == index:
+                print("WARN: unknown weather type: \""+word+"\" Contact Dev to add it")
+                return word_to_color["None"]
+            index += 1
+
+    #gets the output of the dictonary, and if it dosent exist, it trys to call gen_color_from_unk_list to get a associated color value
+    def turn_to_color(word):
+
+        #gets the color value default being UNK
+        first = word_to_color.get(word,"UNK")
+
+        #checks if word in dictonary, if so it will generate a color similar to it.
+        if first == "UNK":
+
+            #if the color contains an "and" statement, it will ingore the second clause "Sunny and Breezy" -> "Sunny"
+            if word.count("and"):
+                print("WARN: unknown weather type: \""+word+"\" Contact Dev to add it")
+                first = gen_color_from_unk_list(word.split(" and ")[0])
+            else:
+                first = gen_color_from_unk_list(word)
+        else:
+
+            #if valid, then just add it to the constant usage list
+            const_usage[first[0]][0] += 1
+            const_usage[first[1]][0] += 1
+            
+        return first
+        
+    
+    
+    index_of_day = 0
+
+    #generates a list of colors for all the days
+    for day_time in worded_data_in:
+
+        #checks if the word has a "then" clause, as that can show more data, instead of 12 hour accuracy it becomes 6 hour.
+        if day_time.count("then"):
+            split_types = day_time.split(" then ")
+
+            #gets the data list from each word
+            returned_item_1 = turn_to_color(split_types[0])
+            returned_item_2 = turn_to_color(split_types[1])
+
+            #will ad the two diffrent "then"s and put them into a list
+            type_data.append([make_striped_graph(returned_item_1[2],returned_item_1[0],returned_item_1[1]),make_striped_graph(returned_item_2[2],returned_item_2[0],returned_item_2[1])])
+
+            #will tell if the item in the list will be renderd if 0% precip
+            empty_show.append([returned_item_1[3],returned_item_2[3]])
+            
+        else:
+            #if the period has the same for both the begining and end, it will make a graph. 
+            returned_item_1 = turn_to_color(day_time)
+            data = make_striped_graph(returned_item_1[2],returned_item_1[0],returned_item_1[1])
+
+            #adds the same data for both days
+            type_data.append([data,data])
+
+            #will tell if the item in the list will be renderd if 0% precip
+            empty_show.append([returned_item_1[3],returned_item_1[3]])
+            
+
+        index_of_day += 1
+
+ 
+    return type_data, empty_show
+    
+
+#generates a worded forecast list from API response
+def show_word_data() :
+
+    res_line = ""
+
+    #checks if any wigets are above, if not then add corners
+    if print_basic_data == False and print_sun_data == False and print_graph_data == False:
+        res_line += "╔"+ "═"*(full_width-3) + "╗" + "\n"
+
+    #index of the days 
+    word_ind = 0
+
+    #length of the diffrent days
+    word_ind_len = len(long_worded_data)
+    
+    for word in long_worded_data:
+
+        #the length of the words on the line 
+        words_len = 0
+        line = ""
+
+        #creates a header for difffrent days 
+        res_line += "║ "+ precip_day[word_ind] + (full_width-4-len(precip_day[word_ind])) * " " +"║ \n" 
+
+        
+        for split_word in word.split():
+            words_len += len(split_word) + 1
+            if words_len >= full_width -9:
+                
+                res_line += "║ "+ line + (full_width-4-len(line)) * " " +"║ \n" 
+                words_len = 0
+                line = ""
+            line += split_word + " " 
+        res_line += "║ " + line  + (full_width-4-len(line)) * " " +"║ \n"
+        word_ind += 1
+        if word_ind_len != word_ind:
+            res_line += "╠"+ "═"*(full_width-3) + "╣" + "\n"
+    res_line += "╚"+ "═"*(full_width-3) + "╝" + "\n"          
+    return res_line
+    
 #when called, it will check if date is within a specific format eg 12h or 24h
 def convert_to_used_tz(time_to_change,used_type):
 
@@ -56,6 +280,34 @@ def show_sun_data():
 
     #adds that to a file that may or may not exist, if not it will be created later
     cur_data_file = "/etc/weatherCLI"+url_siders+"/"+name_string+"/date_"+cur_date+".txt"
+
+    #gets the file for the utc offset
+    cur_timezone_file = "/etc/weatherCLI"+url_siders+"/"+name_string+"/utc_offset.txt"
+
+    #sets default as 0
+    utc_offset = 0
+
+    #checks if file exists
+    if not os.path.isfile(cur_timezone_file):
+
+        #generates an weather api output as text
+        weather_utc = requests.get("https://api.weather.gov/points/"+str(latitude)+","+str(longitude)).text
+
+        #converets text to json, then gets the timezone. converts it to utc offset and divides it
+        utc_offset = str(float(datetime.now(pytz.timezone(json.loads(weather_utc)["properties"]["timeZone"])).strftime('%z'))/100)
+
+        #writes to file 
+        timezone_file = open(cur_timezone_file, "w")
+        
+        #adds the data to file
+        timezone_file.write(str(utc_offset))
+        timezone_file.close()
+        
+    else:
+        #sets the utc offset from the file 
+        utc_offset = open(cur_timezone_file, "r").read()
+
+
     
     #this section is so that any file that has the date_ signaute and is not of current date will be deleted
     #gets current directory files
@@ -72,7 +324,9 @@ def show_sun_data():
 
                 #deletes file
                 os.remove("/etc/weatherCLI/"+url_siders+"/"+name_string+"/"+file)
-                
+
+
+    
     #checks if file exists
     if os.path.isfile(cur_data_file):
 
@@ -127,6 +381,8 @@ def show_sun_data():
         connected = "bottom"
     elif not print_basic_data and not print_graph_data and print_warn_data:
         connected = "bottom"
+    elif print_word_data:
+        connected = "bottom"
     else:
         connected = "none"
 
@@ -144,37 +400,38 @@ def show_sun_data():
             
             res_line += res_line_data
             
-            line = "╚══" + len(sun_rise+" "+ sun_rise_time)*"═" +"╩══" + len(solar_noon+" "+ solar_noon_time)*"═"+"╩" + (1+len(moon_cycle))*"═" + "╩"
+            line = "╚══" + len(sun_rise+" "+ sun_rise_time)*"═" +"╩══" + len(solar_noon+" "+ solar_noon_time)*"═"+"╩" + (2+len(sun_set+" "+ sun_set_time))*"═" + "╩"
             line += (full_width - len(line) -2)*"═" + "╝"
             res_line += line +"\n"
             
         case "bottom":
-            line = "╔══" + len(sun_rise+" "+ sun_rise_time)*"═" +"╦══" + len(solar_noon+" "+ solar_noon_time)*"═"+"╦" + (1+len(moon_cycle))*"═" + "╦"
+            line = "╔══" + len(sun_rise+" "+ sun_rise_time)*"═" +"╦══" + len(solar_noon+" "+ solar_noon_time)*"═"+"╦" + (2+len(sun_set+" "+ sun_set_time))*"═" + "╦"
             line += (full_width - len(line) -2)*"═" + "╗"
             res_line += line +  "\n"
     
             res_line += res_line_data
             
-            line = "╠══" + len(sun_rise+" "+ sun_rise_time)*"═" +"╩══" + len(solar_noon+" "+ solar_noon_time)*"═"+"╩" + (1+len(moon_cycle))*"═" + "╩"
+            line = "╠══" + len(sun_rise+" "+ sun_rise_time)*"═" +"╩══" + len(solar_noon+" "+ solar_noon_time)*"═"+"╩" + (2+len(sun_set+" "+ sun_set_time))*"═" + "╩"
             line += (full_width - len(line) -2)*"═" + "╣"
             res_line += line +"\n"
     
         case "both":
-            line = "╠══" + len(sun_rise+" "+ sun_rise_time)*"═" +"╦══" + len(solar_noon+" "+ solar_noon_time)*"═"+"╦" + (1+len(moon_cycle))*"═" + "╦"
+            line = "╠══" + len(sun_rise+" "+ sun_rise_time)*"═" +"╦══" + len(solar_noon+" "+ solar_noon_time)*"═"+"╦" + (2+len(sun_set+" "+ sun_set_time))*"═" + "╦"
             line += (full_width - len(line) -2)*"═" + "╣"
             res_line += line +  "\n"
 
             res_line += res_line_data
             
-            line = "╠══" + len(sun_rise+" "+ sun_rise_time)*"═" +"╩══" + len(solar_noon+" "+ solar_noon_time)*"═"+"╩" + (1+len(moon_cycle))*"═" + "╩"
+            line = "╠══" + len(sun_rise+" "+ sun_rise_time)*"═" +"╩══" + len(solar_noon+" "+ solar_noon_time)*"═"+"╩" + (2+len(sun_set+" "+ sun_set_time))*"═" + "╩"
             line += (full_width - len(line) -2)*"═" + "╣"
             res_line += line +"\n"
+
         case "none":
-            line = "╔══" + len(sun_rise+" "+ sun_rise_time)*"═" +"╦══" + len(solar_noon+" "+ solar_noon_time)*"═"+"╦" + (1+len(moon_cycle))*"═" + "╦"
+            line = "╔══" + len(sun_rise+" "+ sun_rise_time)*"═" +"╦══" + len(solar_noon+" "+ solar_noon_time)*"═"+"╦" + (2+len(sun_set+" "+ sun_set_time))*"═" + "╦"
             line += (full_width - len(line) -2)*"═" + "╗"
             res_line += line +  "\n"
             res_line += res_line_data
-            line = "╚══" + len(sun_rise+" "+ sun_rise_time)*"═" +"╩══" + len(solar_noon+" "+ solar_noon_time)*"═"+"╩" + (1+len(moon_cycle))*"═" + "╩"
+            line = "╚══" + len(sun_rise+" "+ sun_rise_time)*"═" +"╩══" + len(solar_noon+" "+ solar_noon_time)*"═"+"╩" + (2+len(sun_set+" "+ sun_set_time))*"═" + "╩"
             line += (full_width - len(line) -2)*"═" + "╝"
             res_line += line +"\n"
     return res_line 
@@ -182,15 +439,13 @@ def show_sun_data():
 #converts the forecasts into graphs
 def show_graph_data():
 
-    
+
     res_line = ""
     
 
-    #max height the bars will have
-    MAX_HEIGHT = 10
-    
 
-    
+    all_colors, empty_show = turn_word_data_to_type(worded_data)
+
     #copies the minimum temp forecast and sorts it, geting the first and last items as min and max
     new_min_temp_sorted = temp_forecast_min.copy()
     new_min_temp_sorted.sort()
@@ -256,11 +511,13 @@ def show_graph_data():
     line += "   " 
     #adds the precitpiton data
     line += precip_word
-    line += (3 * len(precip_forecast) - len(precip_word)) * " "
+    line += (PRECIP_GRAPH_COL_LEN * len(precip_forecast) - len(precip_word)) * " "
     line += " ║"
     res_line += line + "\n"
-    
-    line_len = 0
+
+    space_index = math.floor(PRECIP_GRAPH_COL_LEN/2) * " "
+
+    has_bad_precip = False
 
     #because it is made in a terminal the print statements must be calculated top to bottom, 
     #this stats at the highest positon and goes all the way down to -1 where the days are put
@@ -319,7 +576,7 @@ def show_graph_data():
                     #will add an extra space if smaller than string_width
                     if len(string_temp) <string_width:
                         line += (string_width - len(string_temp))*" "
-                        
+                        show_word_data
                 #if less print red
                 elif(height < weath_height_min[min_temp_ind]):
                     line += Back.RED +string_width *" "
@@ -342,15 +599,33 @@ def show_graph_data():
                 #will add an extra space if smaller than string_width
                 if len(string_temp) < 3:
                     line += (3 - len(string_temp))*" "
-
-                #prints the bars
+                    
+                #prints the bars and adds the bars that are for non zero precipitation chance.
                 for precip_ind in range(len(precip_forecast)):
-    
-                    if(height < precip_forecast[precip_ind]/10):
-                        line += Back.RED +"   "
+                    
+                    if empty_show[precip_ind][0] == True:
+                        line += str(all_colors[precip_ind][0][height]) + space_index
+                     
                     else:
-                        line += Back.BLUE +"   "
+                        if(height < precip_forecast[precip_ind]/10 or precip_forecast[precip_ind]== 0):
+                            
+                            
+                            line += str(all_colors[precip_ind][0][height]) + space_index
+                        else:
+                            line += Back.RESET + space_index
 
+                    if empty_show[precip_ind][1] == True  or precip_forecast[precip_ind]== 0:
+                        line += str(all_colors[precip_ind][1][height]) + space_index
+                    else:
+
+                                
+                        if(height < precip_forecast[precip_ind]/10):
+                                
+                            line += str(all_colors[precip_ind][1][height]) + space_index 
+                        else:
+                            line += Back.RESET + space_index  
+
+                        
                 #resets at the end
                 line += Back.RESET
             
@@ -358,10 +633,7 @@ def show_graph_data():
         #this is for the plot names 
         else: 
 
-        
             line += (string_width)*" "        
-
-            
             
             #prints out each day time for each of the bars in the maximum temp
             for day in temp_forecast_max_day:
@@ -379,21 +651,58 @@ def show_graph_data():
             #break between minumum and humidity
             line += WIDTH_BETWEEN_GRAPHS * " "  + "   "  
 
-            # goes through each for the humidity
-            for day in precip_day:
-                days_words.setdefault(day,"HD")
-                line += days_words.get(day) + " "
 
+            # prints out a day for each bar
+            day_ind = 0
+            for day in precip_day:
+
+                #this is done to check if forecast is accurate, as there should be only zero percip and no clouds at the same time
+                if empty_show[day_ind][1] == False  and precip_forecast[day_ind]== 0:
+                    
+                    line += Back.RED
+
+                    #this varable is used later to check if to print Bad data warning if key is enabled
+                    has_bad_precip = True
+                    
+                days_words.setdefault(day,"HD")
+                line += days_words.get(day) + (PRECIP_GRAPH_COL_LEN-2)*" " + Back.RESET
+
+                day_ind += 1
+            line += Back.RESET
         #ends the line
         line += " ║"
-        line_len = len(line)
+
         res_line += line +"\n"
 
+    bad_data_note_1 = "Note: Red in the bar means percipitiation chance unknown"
+
+
+    #checks if keys are enabled to enable the key
+    if not args.noshowkeys:
+        line = "║ key: "
+        used_keys_len = len(line)
+
+        #goes through all of the constant usage keys and checks if there usage is greater than 1, if so it will print its color and type.
+        for key in const_usage.keys():
+            if const_usage[key][0] > 0:
+                line += key+const_usage[key][1]+Back.RESET + " "
+                used_keys_len += len(const_usage[key][1]) +1
+
+        #adds the data in and adds the bar on the other end
+        res_line += line + (full_width-used_keys_len-2)*" "+ "║\n"
+
+        line = "║ "
+
+        #prints an extra line if there is innacurate precip
+        if has_bad_precip:
+            line += bad_data_note_1
+            res_line += line+ (full_width-len(bad_data_note_1)-4)*" "+ "║\n"    
+    
     #checks if the warn data is printed so the bars would connect
     if print_warn_data:
-        res_line += "╠"+(line_len-2)*"═"+"╣"+"\n"
+        res_line += "╠"+(full_width-3)*"═"+"╣"+"\n"
     else:
-        res_line += "╚"+(line_len-2)*"═"+"╝"+"\n"
+        res_line += "╚"+(full_width-3)*"═"+"╝"+"\n"
         
     return res_line
 def show_warn_data():
@@ -426,27 +735,50 @@ def show_warn_data():
     # checks if connected betwen anywhere else
     if print_graph_data or print_basic_data or print_sun_data:
 
-        #prints out each day time for each of the bars in the maximum temp
-        if len(warn_data) != 0:
-            res_line += print_meat()
-            res_line += "╚"+ "═"*(full_width-3) + "╝" + "\n"  
+        if print_word_data:
+            #prints out each day time for each of the bars in the maximum temp
+            if len(warn_data) != 0:
+                res_line += print_meat()
+                res_line += "╠"+ "═"*(full_width-3) + "╣" + "\n"  
+            else:
+                res_line += "║ "+ no_warnings_text +  " "*(full_width-len(no_warnings_text)-4) + "║ \n"
+                res_line += "╠"+ "═"*(full_width-3) + "╣" + "\n"     
+                
         else:
-            res_line += "║ "+ no_warnings_text +  " "*(full_width-len(no_warnings_text)-4) + "║ \n"
-            res_line += "╚"+ "═"*(full_width-3) + "╝" + "\n"         
+            #prints out each day time for each of the bars in the maximum temp
+            if len(warn_data) != 0:
+                res_line += print_meat()
+                res_line += "╚"+ "═"*(full_width-3) + "╝" + "\n"  
+            else:
+                res_line += "║ "+ no_warnings_text +  " "*(full_width-len(no_warnings_text)-4) + "║ \n"
+                res_line += "╚"+ "═"*(full_width-3) + "╝" + "\n"         
 
     #checks if not connected anywhere, so it will just be alone
-    elif print_basic_data == False and print_sun_data == False and print_graph_data == False:
+    elif print_basic_data == False and print_sun_data == False and print_graph_data == False :
  
         #prints out each day time for each of the bars in the maximum temp
-        if len(warn_data) != 0:
-            res_line += "╔"+ "═"*(full_width-3) + "╗" + "\n"
-            res_line += print_meat()
-            res_line += "╚"+ "═"*(full_width-3) + "╝" + "\n" 
+        if print_word_data:
+            if len(warn_data) != 0:
+                res_line += "╔"+ "═"*(full_width-3) + "╗" + "\n"
+                res_line += print_meat()
+                res_line += "╠"+ "═"*(full_width-3) + "╣" + "\n" 
+            else:
+                res_line += "╔"+ "═"*(full_width-3) + "╗" + "\n"
+                res_line += "║ "+ no_warnings_text +  " "*(full_width-len(no_warnings_text)-4) + "║ \n"
+                res_line += "╠"+ "═"*(full_width-3) + "╣" + "\n"    
+                
         else:
-            res_line += "╔"+ "═"*(full_width-3) + "╗" + "\n"
-            res_line += "║ "+ no_warnings_text +  " "*(full_width-len(no_warnings_text)-4) + "║ \n"
-            res_line += "╚"+ "═"*(full_width-3) + "╝" + "\n"          
-            
+            if len(warn_data) != 0:
+                res_line += "╔"+ "═"*(full_width-3) + "╗" + "\n"
+                res_line += print_meat()
+                res_line += "╚"+ "═"*(full_width-3) + "╝" + "\n" 
+            else:
+                res_line += "╔"+ "═"*(full_width-3) + "╗" + "\n"
+                res_line += "║ "+ no_warnings_text +  " "*(full_width-len(no_warnings_text)-4) + "║ \n"
+                res_line += "╚"+ "═"*(full_width-3) + "╝" + "\n"          
+                
+    
+    
     else:
         None
 
@@ -478,17 +810,22 @@ def show_basic_data():
     line += local_station_humidity.replace(" ","")+"%  Visbility: "+local_station_visibility.replace(" ","")+ " "+ visibility_units 
     res_line += line + " "*(full_width - len(line)-2) +"║\n"
 
-    line = "║ Wind Direction: "+local_station_wind_dir + "°  Sustained Wind: "+ local_station_wind_sustained+" "+ wind_units 
+    #used to check if unknown wind, unknown winds are 999 degrees which is impossible
+    if local_station_wind_dir == "999":
+        wind_dir = "NaN"
+    else:
+        wind_dir = local_station_wind_dir
+    
+    line = "║ Wind Direction: "+wind_dir + "°  Sustained Wind: "+ local_station_wind_sustained+" "+ wind_units 
     line += "  Gust: "+local_station_gust.replace(" ","")+" " +wind_units
     res_line += line + " "*(full_width - len(line)-2) +"║\n"
 
     #checks if the bottom is connected to anything if so it will change the bars to connecting ones
     if not print_sun_data:
-        if print_graph_data or print_warn_data:
+        if print_graph_data or print_warn_data or print_word_data:
             res_line += "╠"+ "═"*(full_width-3) + "╣" + "\n"   
         else:
             res_line += "╚"+ "═"*(full_width-3) + "╝" + "\n"   
-
     
     return res_line
 
@@ -498,13 +835,58 @@ if __name__ == '__main__':
     string = ""
     
     WIDTH_BETWEEN_GRAPHS = 3
+
+    #max height the bars will have
+    MAX_HEIGHT = 10
+    
+    PRECIP_GRAPH_COL_LEN = 4
+
+    UNK_CONST = Back.BLACK
+
+    NONE_CONST = Back.RESET
+    
+    SNOW_CONST = Back.BLUE
+    RAIN_CONST = Back.GREEN
+    CLEAR_CONST = Back.WHITE
+    CLOUD_CONST = Back.LIGHTBLACK_EX
+    THUNDER_CONST = Back.YELLOW
+    SEV_THUNDER_CONST = Back.RED
+    SLEET_CONST = Back.MAGENTA
+    FREEZE_CONST = Back.LIGHTMAGENTA_EX
+    
+    FOG_CONST = Back.LIGHTCYAN_EX
+    HAZE_CONST = Back.LIGHTGREEN_EX
+    
+    COLD_CONST = Back.CYAN
+    WIND_CONST = Back.LIGHTYELLOW_EX
+    
+    #this is only if the user generates a key for the diffrent colors, so the progam knows what weather types to show the user.
+    const_usage = {
+        UNK_CONST:[0,"Unknown"],
+        SNOW_CONST:[0,"Snow"],
+        RAIN_CONST:[0,"Rain"],
+        CLEAR_CONST:[0,"Clear"],
+        CLOUD_CONST:[0,"Clouds"],
+        THUNDER_CONST:[0,"Thunderstorms"],
+        SEV_THUNDER_CONST:[0,"Severe Thunderstorms"],
+        SLEET_CONST:[0,"Sleet"],
+        FREEZE_CONST:[0,"Freezing Rain"],
+        
+        COLD_CONST:[0,"Cold"],
+        FOG_CONST:[0,"Fog"],
+        NONE_CONST:[-10000,"Other Unknown"],
+        HAZE_CONST:[0,"Haze"],
+        WIND_CONST:[0,"Windy"]
+    }
+
+    
     
     #default config for all modules
     print_basic_data = False
     print_sun_data = False
     print_graph_data = False
     print_warn_data = False
-
+    print_word_data = False
     
     #default time format
     hours_type = "12h"
@@ -568,16 +950,20 @@ if __name__ == '__main__':
              
             Default time format: 12 hours
 
+            weatherCLI v1.3.0
         '''))
     parser.add_argument("zipcode", type=str, help="town or city name shoud be the query \"town:<town name> <State>\" zipcodes should be \"zip:<zipcode>\" and points of intrest should be \"poi:<placename>\"")
-    parser.add_argument("-t", "--type", type=str, help="how complatated the data will be: simple | all | onlywarnings | onlysun<Timezone> eg: onlysunEST or onlysunCST",default="All")
-    parser.add_argument("-s", "--sun", type=str, help="shows sun data",default="none")
+    parser.add_argument("-t", "--type", type=str, help="how complatated the data will be: simple | most | all | onlywarnings | onlyworded | onlysun",default="All")
+    parser.add_argument("-s", "--sun", help="shows sun data",action='store_true')
     parser.add_argument("-i", "--ignoreSizeRequirements", help="The program will ignore the width of the display", action='store_true')
     parser.add_argument("-t12", "--time12h", help="12h clock", action='store_true')
     parser.add_argument("-t24", "--time24h", help="24h clock", action='store_true')
-
-
-
+    parser.add_argument("-a", "--ignorewarnings", help="Ignore warnings from station ", action='store_true')
+    parser.add_argument("-w", "--wordedweather", help="Show worded weather", action='store_true')
+    parser.add_argument("-k", "--noshowkeys", help="Do not render the weather color definitions", action='store_true')
+    parser.add_argument("-r", "--raw", help="Only print NOAA's XML result", action='store_true')
+    
+    parser.add_argument('-v','--version', action='version', version='weatherCLI v2.0.0')
 
     
     #runs arguments
@@ -592,6 +978,7 @@ if __name__ == '__main__':
 
     if args.time24h:
         hours_type = "24h"
+
     
     #trys to see if contains a website, 
     if args.zipcode.count("https://") == 1:
@@ -678,47 +1065,42 @@ if __name__ == '__main__':
     
     sun_calculated = False
     
-    if args.sun != "none":
-
-        #trys to get the utc ofsett from the dictonary, returns UNK if unknown
-        utc_offset = timezones.get(args.sun.lower(),"UNK")
-
-        #throws new exception if unknown timezone
-        if utc_offset != "UNK":
-            print_sun_data = True
-        else:
-            raise Exception("unknown timezone")
-        sun_calculated = True
 
     #generates possible modules to be enabled
     match args.type.lower():
         case "simple":
             print_basic_data = True
-        case "all":
+        case "most":
             print_basic_data = True
             print_graph_data = True
             print_warn_data = True
         case "onlywarnings":
             print_warn_data = True
+        case "onlyworded":
+            print_word_data = True
+        case "all":
+            print_basic_data = True
+            print_graph_data = True
+            print_warn_data = True
+            print_word_data = True
 
+    
+    if args.wordedweather and (args.type.lower() == "onlyworded" or args.type.lower() == "all"):
+        raise Exception("wordedweather and type everything are Incompatable")
+
+    #checks if sun enabled
+    if args.sun:
+        print_sun_data = True
+    
     #checks if the args is for sun calculation only
     if args.type.lower().find("onlysun") != -1:
 
         #throws an error if already enabled
-        if sun_calculated:
+        if args.sun:
             raise Exception("onlysun and -s are incompatable")
 
-        #gets the utc offset, UNK is if none found 
-        utc_offset = timezones.get(args.type.lower()[7:],"UNK")
+        print_sun_data = True
 
-        #throws an error if unknown timezone
-        if utc_offset != "UNK":
-            print_sun_data = True
-        else:
-            raise Exception("unknown timezone")
-
-        
-        
     #testing strings
     
     # string = "https://forecast.weather.gov/MapClick.php?lat=46.8083&lon=-100.7837&unit=0&lg=english&FcstType=dwml"
@@ -733,7 +1115,6 @@ if __name__ == '__main__':
     
     #gets the xml from NOAA
 
-    
     weather_data = requests.get(string)
     weather_xml = BeautifulSoup(weather_data.text, "xml")
     
@@ -759,32 +1140,78 @@ if __name__ == '__main__':
     station = weather_xml.find_all("data")[1]
     
     local_station_name = station.find("location").find("area-description").text
-    
-    
-    local_station_temp = station.find_all(attrs={"type" : "apparent"})[0].text[1:]
-    local_station_dew_point = station.find_all(attrs={"type" : "dew point"})[0].text[1:]
-    
-    local_station_humidity = station.find_all("humidity",attrs={"type" : "relative"})[0].text[1:]
-    
-    local_station_weather_type = station.find_all("weather-conditions")[0].get_attribute_list("weather-summary")[0]
-    
-    local_station_visibility = station.find_all("weather-conditions")[1].find("visibility").text
-    
-    local_station_wind_dir = station.find_all("direction")[0].find("value").text
-    
-    local_station_gust = station.find_all("wind-speed",attrs={"type" : "gust"})[0].find("value").text
-    local_station_wind_sustained = station.find_all("wind-speed",attrs={"type" : "sustained"})[0].find("value").text
-    
-    
+
+    #will get nan response if there is no element
+    try:
+        local_station_temp = station.find_all(attrs={"type" : "apparent"})[0].text[1:]
+    except:
+        print("WARN: failed to get local station temp")
+        local_station_temp = "NaN"
+
+    #will get nan response if there is no element
+    try:
+        local_station_dew_point = station.find_all(attrs={"type" : "dew point"})[0].text[1:]
+    except:
+        print("WARN: failed to get local station dew point")
+        local_station_dew_point = "NaN"
+
+    #will get nan response if there is no element
+    try:
+        local_station_humidity = station.find_all("humidity",attrs={"type" : "relative"})[0].text[1:]
+    except:
+        print("WARN: failed to get local station humidity")
+        local_station_humidity = "NaN"
+
+    #will get nan response if there is no element
+    try:
+        local_station_weather_type = station.find_all("weather-conditions")[0].get_attribute_list("weather-summary")[0]
+    except:
+        print("WARN: failed to get local station weather type")
+        local_station_weather_type = "NaN"
+
+    #will get nan response if there is no element
+    try:
+        local_station_visibility = station.find_all("weather-conditions")[1].find("visibility").text
+    except:
+        print("WARN: failed to get local station vibility")
+
+    try:
+        local_station_wind_dir = station.find_all("direction")[0].find("value").text
+    except:
+        print("WARN: failed to get local station wind direction")
+        local_station_wind_dir = "NaN"
+        
+    #will get nan response if there is no element
+    try:
+        local_station_gust = station.find_all("wind-speed",attrs={"type" : "gust"})[0].find("value").text
+    except:
+        print("WARN: failed to get local station gust")
+        local_station_gust = "NaN"
+
+    #will get nan response if there is no element
+    try:
+        local_station_wind_sustained = station.find_all("wind-speed",attrs={"type" : "sustained"})[0].find("value").text
+    except:
+        local_station_wind_sustained = "NaN"
+        print("WARN: failed to get local station wind sustained")
+        
     #units
     wind_units = station.find("wind-speed").get_attribute_list("units")[0]
     visibility_units = station.find_all("weather-conditions")[1].find("visibility").get_attribute_list("units")[0]
     temp_units = station.find_all(attrs={"type" : "apparent"})[0].get_attribute_list("units")[0]
     height_units = station.find("location").find("height").get_attribute_list("height-units")[0]
+
+    worded_data = []
+    for day_word in weather_xml.find("weather").find_all("weather-conditions"):
+        worded_data.append(day_word.get_attribute_list("weather-summary")[0])
+
     
-    
-    
-    
+    long_worded_data = []
+    for day_word in weather_xml.find("wordedForecast").find_all("text"):
+        long_worded_data.append(day_word.text)
+
+
+
     
     #generates a list of time formats to use
     time_keys = {}
@@ -835,6 +1262,9 @@ if __name__ == '__main__':
         
     except:
         None
+
+
+
     
     #converts the long days to short form
     days_words = {
@@ -878,31 +1308,36 @@ if __name__ == '__main__':
     string_width +=2
     
     
-    
     #gets terminal size
-
+    
     columns, rows = shutil.get_terminal_size()
     
     #temp for testing on jupyterlab
     #columns = 176
     
     #calculates how wide the window will be because some temps are more than two digites ie 100 degrees
-    full_width = 1 + string_width * (len(temp_forecast_min)+len(temp_forecast_max)+1) + WIDTH_BETWEEN_GRAPHS*2 + 3 + 3*len(precip_forecast) + 3
+    full_width = 1 + string_width * (len(temp_forecast_min)+len(temp_forecast_max)+1) + WIDTH_BETWEEN_GRAPHS*2 + 3 + PRECIP_GRAPH_COL_LEN*len(precip_forecast) + 3
     
     #checks if the window width is greater than the TUI window
     all_lines = "" 
 
     if columns >= full_width or args.ignoreSizeRequirements:
     
-        #iterates through each of the functiins
-        if print_basic_data:
-            all_lines += show_basic_data()
-        if print_sun_data:
-            all_lines += show_sun_data()
-        if print_graph_data:
-            all_lines += show_graph_data()
-        if print_warn_data:
-            all_lines += show_warn_data()
+        if not args.raw:
+            #iterates through each of the functiins
+            if print_basic_data:
+                all_lines += show_basic_data()
+            if print_sun_data:
+                all_lines += show_sun_data()
+            if print_graph_data:
+                all_lines += show_graph_data()
+            if print_warn_data:
+                all_lines += show_warn_data()
+            if print_word_data:
+                all_lines += show_word_data()
+        else:
+            print(weather_xml.prettify())
+            
     else:
         #tells user that screen size is too small
         print("screen width of: "+str(columns)+" is too small")
