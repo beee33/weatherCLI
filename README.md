@@ -252,13 +252,19 @@ install dependencies
 
     pip install pipreqs
 
-run pipreqs, after executing, it will generate a reqirements.txt file in project directory
+run pipreqs, after executing, it will generate a reqirements.txt file in your project directory
 
+*Note: --scan-notebooks I am running this in a Jupyter Notebook, so the program will scan for files there, you can remove this if you are not using Jupyter Notebooks.
 
-[Run progam](#build-from-source)
+*Note: --force, Use this to override previous reqirements.txt files, you dont need this if you are not overriding any files.
 
-##### If you get bs4.FeatureNotFound: Couldn't find a tree builder with the features you requested: xml. Do you need to install a parser library? error
-This is because the reqirements.txt file misses a required library that BeautfulSoup uses. 
+    pipreqs <project directory> --force --scan-notebooks
+
+Test if it works using these steps:
+[Run progam as python file](#user-content-only-run-python-file-instead)
+
+##### If you get bs4.FeatureNotFound: Couldn't find a tree builder with the features you requested: xml. Do you need to install a parser library? error.
+This is because the reqirements.txt file misses a required library that BeautfulSoup uses. Add missing library.
 
     echo "lxml==5.3.1" >> requirements.txt 
     
