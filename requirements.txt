@@ -1,5 +1,6 @@
 beautifulsoup4==4.10.0
 colorama==0.4.4
+pytz==2022.1
 Requests==2.32.3
 termcolor==2.5.0
 lxml==5.3.1
