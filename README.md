@@ -3,7 +3,7 @@
 weatherCLI is a Linux command line UI based application that shows the user the weather and sun information from the National Weather Service written in Python. 
 Because of this, weatherCLI is only available in the United States, and its territories, However, the sun calculation is worldwide.
 
-![WeatherCLI](https://github.com/user-attachments/assets/eb9a932e-d8c4-4070-9cf4-cd73e49b40bb)
+<img src="https://github.com/user-attachments/assets/eb9a932e-d8c4-4070-9cf4-cd73e49b40bb" width="100%" ></img>
 
 
 
@@ -275,24 +275,25 @@ WeathterCLI uses OpenStreetMaps’s geocoding API to get latitude and longitude 
 <br>
 
     weatherCLI "city:Boston MA" -t most -s 
-![most](https://github.com/user-attachments/assets/24a22a27-4192-432b-adff-5109ccf5ceaf)
+
+<img src="https://github.com/user-attachments/assets/24a22a27-4192-432b-adff-5109ccf5ceaf" width="100%" ></img>
 -----------------
 
     weatherCLI "poi:Rochester Institute of Technology" -t most
-![image](https://github.com/user-attachments/assets/e9955d3a-bd70-4731-a5d7-b129e0f2eeea)
+<img src="https://github.com/user-attachments/assets/e9955d3a-bd70-4731-a5d7-b129e0f2eeea" width = "100%"></img>
 -----------------
 
     weatherCLI "zip:10001" -t most -s 
-![image](https://github.com/user-attachments/assets/4770f279-50a9-418a-8fe1-b2222a0430f5)
+<img src="https://github.com/user-attachments/assets/4770f279-50a9-418a-8fe1-b2222a0430f5" width = "100%"></img>
 -----------------
 
     weatherCLI "city:Palm Beach FL" -t all -s 
-![all](https://github.com/user-attachments/assets/31e768aa-64ec-4379-a70b-2972c2a859dc)
+<img src="https://github.com/user-attachments/assets/31e768aa-64ec-4379-a70b-2972c2a859dc" width = "100%"></img>
 -----------------
 
     weatherCLI "city:Seattle WA" -t24 -t onlysun
-![sun](https://github.com/user-attachments/assets/d42893ca-a9ac-4d9e-8e21-eeacacc07755)
+<img src="https://github.com/user-attachments/assets/d42893ca-a9ac-4d9e-8e21-eeacacc07755" width = "100%"></img>
 -----------------
 
     weatherCLI "city:Salt Lake City UT" -t onlyworded
-![image](https://github.com/user-attachments/assets/1cc6b228-3e84-417f-9105-aaf94733fe82)
+<img src="https://github.com/user-attachments/assets/1cc6b228-3e84-417f-9105-aaf94733fe82" width = "100%"></img>
