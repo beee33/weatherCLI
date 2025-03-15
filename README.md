@@ -1,8 +1,7 @@
 # weatherCLI
 
 weatherCLI is a Linux command line UI based application that shows the user the weather and sun information from the National Weather Service written in Python. 
-Because of this, weatherCLI is only available in the United States, and its territories, However, the sun calculation is available for most of the places that share the same timezones as the United States, examples: Canada, Mexico and parts of western South America.
-
+Because of this, weatherCLI is only available in the United States, and its territories, However, the sun calculation is worldwide.
 
 ![WeatherCLI](https://github.com/user-attachments/assets/eb9a932e-d8c4-4070-9cf4-cd73e49b40bb)
 
@@ -43,7 +42,7 @@ Sun data:
 - Sunrise
 - Sunset
 - Solar noon
-- Moon Info
+- Moon info
 
 Live data from the location’s nearest weather station:
 - Temperature
