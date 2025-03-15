@@ -261,7 +261,7 @@ run pipreqs, after executing, it will generate a reqirements.txt file in your pr
 
 Test if it works, by following steps: 3 4a/4b:
 
-[Run progam as python file](#user-content-only-run-python-file-instead)
+[Run progam as python file](#user-content-3-cd-into-weathercli-directory)
 
 ##### If you get bs4.FeatureNotFound: Couldn't find a tree builder with the features you requested: xml. Do you need to install a parser library? error.
 This is because the reqirements.txt file misses a required library that BeautfulSoup uses. Add missing library.
