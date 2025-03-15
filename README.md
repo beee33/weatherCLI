@@ -247,8 +247,21 @@ This should be replaced with your python version and the temp directory may be d
 
     export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/python3.10
 
+#### generating requiremnts.txt
+install dependencies
+
+    pip install pipreqs
+
+run pipreqs, after executing, it will generate a reqirements.txt file in project directory
 
 
+[Run progam](#build-from-source)
+
+##### If you get bs4.FeatureNotFound: Couldn't find a tree builder with the features you requested: xml. Do you need to install a parser library? error
+This is because the reqirements.txt file misses a required library that BeautfulSoup uses. 
+
+    echo "lxml==5.3.1" >> requirements.txt 
+    
 ## How does weatherCLI know the location?
 
 WeahterCLI uses OpenStreetMaps’s geocoding API to get latitude and longitude positions from user input. It converts the latitude and longitude into a url that has the XML data. This url is stored in “/etc/weatherCLI/&lt;towns/zipcode/places&gt;/&lt;queryname&gt;/url.txt” an example is: “/etc/weatherCLI/towns/Boston\ MA/url.txt”.  The data for the sun positions are only calculated once per day per location, and the output is put in a file so that the user doesn't have to recalculate the same sun data for each day. All of the urls and sun data is stored in “/etc/weatherCLI/”
