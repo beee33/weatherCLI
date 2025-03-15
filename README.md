@@ -270,35 +270,30 @@ This is because the reqirements.txt file misses a required library that Beautful
     
 ## How does weatherCLI know the location?
 
-WeahterCLI uses OpenStreetMaps’s geocoding API to get latitude and longitude positions from user input. It converts the latitude and longitude into a url that has the XML data. This url is stored in “/etc/weatherCLI/&lt;towns/zipcode/places&gt;/&lt;queryname&gt;/url.txt” an example is: “/etc/weatherCLI/towns/Boston\ MA/url.txt”.  The data for the sun positions are only calculated once per day per location, and the output is put in a file so that the user doesn't have to recalculate the same sun data for each day. All of the urls and sun data is stored in “/etc/weatherCLI/”
+WeathterCLI uses OpenStreetMaps’s geocoding API to get latitude and longitude positions from user input. It converts the latitude and longitude into a url that has the XML data. This url is stored in “/etc/weatherCLI/&lt;towns/zipcode/places&gt;/&lt;queryname&gt;/url.txt” an example is: “/etc/weatherCLI/towns/Boston\ MA/url.txt”.  The data for the sun positions are only calculated once per day per location, and the output is put in a file so that the user doesn't have to recalculate the same sun data for each day. All of the urls and sun data is stored in “/etc/weatherCLI/”
 
+# CLI examples:
+<br>
 
+    weatherCLI "city:Boston MA" -t most -s 
+![most](https://github.com/user-attachments/assets/24a22a27-4192-432b-adff-5109ccf5ceaf)
+-----------------
 
+    weatherCLI "poi:Rochester Institute of Technology" -t most
+![image](https://github.com/user-attachments/assets/e9955d3a-bd70-4731-a5d7-b129e0f2eeea)
+-----------------
 
-#### Configurable to the data you want to see:
-<video autoplay src='https://github.com/user-attachments/assets/0d54eb4c-fbcb-4a5f-94e7-dd34c54d86c7'></video>
+    weatherCLI "zip:10001" -t most -s 
+![image](https://github.com/user-attachments/assets/4770f279-50a9-418a-8fe1-b2222a0430f5)
+-----------------
 
+    weatherCLI "city:Palm Beach FL" -t all -s 
+![all](https://github.com/user-attachments/assets/31e768aa-64ec-4379-a70b-2972c2a859dc)
+-----------------
 
+    weatherCLI "city:Seattle WA" -t24 -t onlysun
+![sun](https://github.com/user-attachments/assets/d42893ca-a9ac-4d9e-8e21-eeacacc07755)
+-----------------
 
-
-
-#### Calculates sunrise and sunset:
-<video autoplay src='https://github.com/user-attachments/assets/055b9d86-cfbb-4416-9768-d3c778f76a3a'></video>
-
-
-
-
-
-
-#### Can get weather from zipcode, town/city name or point of intrest(ie: schools, goverment buildings and airports):
-<video autoplay src='https://github.com/user-attachments/assets/01623921-4ded-4bad-91e4-9441a3886d2e'></video>
-
-
-#### Can Combine multiple tags:
-<video autoplay src='https://github.com/user-attachments/assets/c7cb0ef4-c09d-4883-9a77-504ab44887d4'></video>
-
-#### Inbuilt documentation:
-<video autoplay src='https://github.com/user-attachments/assets/e87a1e42-ea32-45a8-bb17-eb480c3a8ebd'></video>
-
-### *video only edited to speed up typing (program running time is at real time speed)
-
+    weatherCLI "city:Salt Lake City UT" -t onlyworded
+![image](https://github.com/user-attachments/assets/1cc6b228-3e84-417f-9105-aaf94733fe82)
