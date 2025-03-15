@@ -4,7 +4,8 @@ weatherCLI is a Linux command line UI based application that shows the user the 
 Because of this, weatherCLI is only available in the United States, and its territories, However, the sun calculation is available for most of the places that share the same timezones as the United States, examples: Canada, Mexico and parts of western South America.
 
 
-![weatherCLI_image](https://github.com/user-attachments/assets/48d7198f-9ad0-4703-987c-cde9ec7c40e8)
+![WeatherCLI](https://github.com/user-attachments/assets/eb9a932e-d8c4-4070-9cf4-cd73e49b40bb)
+
 
 
 Application for generating weather using data from NOAA
@@ -33,14 +34,16 @@ https://openstreetmap.org/copyright
 
 ## What kind of data can the application show:
 
-weather warnings(eg: Frost Advisory, Winter Storm Warning or Severe Thunderstorm Warning) 
+Graphs:
+- Precipitation type & Probability 
+- Daily low
+- Daily high
 
 Sun data:
-
 - Sunrise
 - Sunset
 - Solar noon
-
+- Moon Info
 
 Live data from the location’s nearest weather station:
 - Temperature
@@ -53,11 +56,8 @@ Live data from the location’s nearest weather station:
 - Wind gusts (will show NA knots if no gusts)
 - Local station url if you want to get more information:
 
-Temperature graphs:
-- Daily low
-- Daily high
+weather warnings(eg: Frost Advisory, Winter Storm Warning or Severe Thunderstorm Warning) 
 
-12 hour Precipitation probability graphs
 
 ## How does weatherCLI get its data?
 
