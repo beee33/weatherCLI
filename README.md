@@ -259,7 +259,8 @@ run pipreqs, after executing, it will generate a reqirements.txt file in your pr
 
     pipreqs <project directory> --force --scan-notebooks
 
-Test if it works using these steps:
+Test if it works, by following steps: 3 4a/4b:
+
 [Run progam as python file](#user-content-only-run-python-file-instead)
 
 ##### If you get bs4.FeatureNotFound: Couldn't find a tree builder with the features you requested: xml. Do you need to install a parser library? error.
