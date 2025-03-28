@@ -33,16 +33,24 @@ https://openstreetmap.org/copyright
 
 ## What kind of data can the application show:
 
+
+Human readable worded weather from NOAA's API (example: Partly cloudy, with a low around 32. West wind 5 to 14 mph):
+- Both day and night are uniuqe
+- Up too 1 week forecast
+
+
 Graphs:
 - Precipitation type & Probability 
 - Daily low
 - Daily high
+
 
 Sun data:
 - Sunrise
 - Sunset
 - Solar noon
 - Moon info
+
 
 Live data from the location’s nearest weather station:
 - Temperature
@@ -55,7 +63,9 @@ Live data from the location’s nearest weather station:
 - Wind gusts (will show NA knots if no gusts)
 - Local station url if you want to get more information:
 
-weather warnings(eg: Frost Advisory, Winter Storm Warning or Severe Thunderstorm Warning) 
+
+weather warnings (example: Frost Advisory, Winter Storm Warning or Severe Thunderstorm Warning) 
+
 
 
 ## How does weatherCLI get its data?
