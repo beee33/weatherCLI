@@ -36,7 +36,7 @@ https://openstreetmap.org/copyright
 
 Human readable worded weather from NOAA's API (example: Partly cloudy, with a low around 32. West wind 5 to 14 mph):
 - Both day and night are unique
-- Up too 1 week forecast
+- Up to one week forecast
 
 
 Graphs:
