@@ -34,6 +34,7 @@ def turn_word_data_to_type(worded_data_in):
     def make_striped_graph(precip_per,main_color,sec_color):
         spotted = []
 
+        
         #checks if both are the same color if so it will just make a list of single colors
         if main_color == sec_color:
             
@@ -49,7 +50,8 @@ def turn_word_data_to_type(worded_data_in):
                     return [main_color,sec_color,main_color,sec_color,main_color,sec_color,main_color,sec_color,main_color,sec_color,main_color]
                 case 30:
                     return [sec_color,sec_color,main_color,sec_color,sec_color,main_color,sec_color,sec_color,main_color,sec_color,sec_color]
-            raise Exception("precentage is not valid")
+            
+            raise Exception("precentage of: "+str(precip_per)+" is not valid")
             
     # primary color, secondary color, percent usage for primary, will be used when 0% percip
     #can either be 70 50 or 30
@@ -62,7 +64,7 @@ def turn_word_data_to_type(worded_data_in):
         "Partly Sunny":[CLOUD_CONST,CLEAR_CONST,70,True],
         "Chance Rain/Snow":[RAIN_CONST,SNOW_CONST,50,False],
         "Snow and Blowing Snow":[SNOW_CONST,SNOW_CONST,100,False],
-        "Chance Snow Showers and Breezy":[SNOW_CONST,WIND_CONST,100,False],
+        "Chance Snow Showers and Breezy":[SNOW_CONST,WIND_CONST,50,False],
         "Snow Showers Likely and Areas Blowing Snow":[SNOW_CONST,SNOW_CONST,100,False],
         "Chance Snow":[SNOW_CONST,SNOW_CONST,100,False],
         "Snow Showers":[SNOW_CONST,SNOW_CONST,100,False],
@@ -71,7 +73,7 @@ def turn_word_data_to_type(worded_data_in):
         "Chance Showers":[RAIN_CONST,RAIN_CONST,100,False],
         "Isolated Showers":[RAIN_CONST,RAIN_CONST,100,False],
         "Mostly Clear":[CLEAR_CONST,CLOUD_CONST,70,True],
-        "Sunny and Breezy":[CLEAR_CONST,WIND_CONST,100,True],
+        "Sunny and Breezy":[CLEAR_CONST,WIND_CONST,50,True],
         "Sunny":[CLEAR_CONST,CLEAR_CONST,100,True],
         "Slight Chance Snow":[SNOW_CONST,SNOW_CONST,100,False],
         "Snow Likely":[SNOW_CONST,SNOW_CONST,100,False],
@@ -94,10 +96,10 @@ def turn_word_data_to_type(worded_data_in):
         "Showers":[RAIN_CONST,RAIN_CONST,100,False],
         "Showers Likely":[RAIN_CONST,RAIN_CONST,100,False],
         "Scattered Showers":[RAIN_CONST,RAIN_CONST,100,False],
-        "Isolated Showers and Breezy":[RAIN_CONST,WIND_CONST,100,False],
+        "Isolated Showers and Breezy":[RAIN_CONST,WIND_CONST,50,False],
         "Isolated Showers":[RAIN_CONST,RAIN_CONST,100,False],
-        "Mostly Cloudy and Breezy":[CLEAR_CONST,WIND_CONST,100,True],
-        "Partly Sunny and Breezy":[CLEAR_CONST,WIND_CONST,100,True],
+        "Mostly Cloudy and Breezy":[CLEAR_CONST,WIND_CONST,50,True],
+        "Partly Sunny and Breezy":[CLEAR_CONST,WIND_CONST,50,True],
         "Thunderstorms":[THUNDER_CONST,THUNDER_CONST,100,False],
         "Severe Thunderstorms":[SEV_THUNDER_CONST,SEV_THUNDER_CONST,100,False],
         "Sleet":[SLEET_CONST,SLEET_CONST,100,False],
@@ -134,7 +136,8 @@ def turn_word_data_to_type(worded_data_in):
 
             #checks if the index is in the dictonary
             if split_word[index] in word_to_color:
-                print("WARN: unknown weather type: \""+word+"\" used most similar item using \""+split_word[index]+"\"")
+                if (not args.suppress):
+                    print("WARN: unknown weather type: \""+word+"\" used most similar item using \""+split_word[index]+"\". Use -u/--suppress to ignore these warnings.")
 
                 #adds it to the constant usage list for both early and late period, 
                 const_usage[word_to_color[split_word[index]][0]][0] += 1
@@ -143,7 +146,8 @@ def turn_word_data_to_type(worded_data_in):
 
             # will return an unknown bar if the index is at the end of the list
             if split_size == index:
-                print("WARN: unknown weather type: \""+word+"\" Contact Dev to add it")
+                if(not args.suppress):
+                    print("WARN: unknown weather type: \""+word+"\" Contact Dev to add it. Use -u/--suppress to ignore these warnings.")
                 return word_to_color["None"]
             index += 1
 
@@ -158,7 +162,8 @@ def turn_word_data_to_type(worded_data_in):
 
             #if the color contains an "and" statement, it will ingore the second clause "Sunny and Breezy" -> "Sunny"
             if word.count("and"):
-                print("WARN: unknown weather type: \""+word+"\" Contact Dev to add it")
+                if(not args.suppress):
+                    print("WARN: unknown weather type: \""+word+"\" Contact Dev to add it. Use -u/--suppress to ignore these warnings.")
                 first = gen_color_from_unk_list(word.split(" and ")[0])
             else:
                 first = gen_color_from_unk_list(word)
@@ -448,7 +453,6 @@ def show_graph_data():
 
     res_line = ""
     
-
 
     all_colors, empty_show = turn_word_data_to_type(worded_data)
 
@@ -988,10 +992,11 @@ if __name__ == '__main__':
     parser.add_argument("-w", "--wordedweather", help="Show worded weather", action='store_true')
     parser.add_argument("-k", "--noshowkeys", help="Do not render the weather color definitions", action='store_true')
     parser.add_argument("-r", "--raw", help="Only print NOAA's XML result", action='store_true')
+    parser.add_argument("-u", "--suppress", help="Ignore warnings from weather type unknown", action='store_true')
     
+
     parser.add_argument('-v','--version', action='version', version='weatherCLI v2.0.1')
 
-    
     #runs arguments
     args = parser.parse_args()
 
