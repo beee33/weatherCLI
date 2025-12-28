@@ -114,7 +114,10 @@ def turn_word_data_to_type(worded_data_in):
         "Rain and Patchy Fog":[RAIN_CONST,FOG_CONST,50,False],
         "Chance Rain and Areas Dense Fog":[RAIN_CONST,FOG_CONST,50,False],
         "Areas Dense Fog":[FOG_CONST,FOG_CONST,100,True],
-        "Chance Rain and Patchy Fog":[RAIN_CONST,FOG_CONST,50,False]
+        "Chance Rain and Patchy Fog":[RAIN_CONST,FOG_CONST,50,False],
+        " ":[UNK_CONST,UNK_CONST,100,True],
+        "Wintry Mix":[SNOW_CONST,FREEZE_CONST,50,False],
+        
     }
 
     #gets a period worth of colors, if the day was not regestered in word_to_color. It will try to get the closest approximation
@@ -370,7 +373,10 @@ def show_sun_data():
     solar_noon = "Solar Noon(Sun's peak):"
     sun_set = "Sunset:"
     connected = "top"
-    
+    moon_word_short = "Cycle: "
+    moon_word_long = "Moon Cycle: "
+
+    moon_word = moon_word_long
 
     #gets what sides the row is connected too
     if print_basic_data and print_graph_data:
@@ -385,9 +391,9 @@ def show_sun_data():
         connected = "bottom"
     else:
         connected = "none"
-
-    data_line = "║ "+sun_rise+" "+ sun_rise_time+" ║ "+solar_noon+" "+ solar_noon_time+" ║ "+ sun_set+" "+ sun_set_time + " ║ Moon Cycle: " + moon_cycle + " "+moon_emoji.get(moon_cycle.lower(),"❓")
-    res_line_data = data_line + (full_width - len(data_line)-2)*" "+"║ \n"
+    
+    data_line = "║ "+sun_rise+" "+ sun_rise_time+" ║ "+solar_noon+" "+ solar_noon_time+" ║ "+ sun_set+" "+ sun_set_time + " ║"+moon_word + moon_cycle + " "+moon_emoji.get(moon_cycle.lower(),"❓")
+    res_line_data = data_line + (full_width - len(data_line)-3)*" "+"║ \n"
 
     moon_cycle = " "+ moon_cycle
     
@@ -492,7 +498,7 @@ def show_graph_data():
     
     max_temp_word = "Daily Max Temprature" 
     min_temp_word = "Daily Min Temprature"
-    precip_word = "12 Hourly Probability of Precipitation"
+    precip_word = "12 Hourly Probability of Preciptation"
     
     line += (string_width)*" " 
     
@@ -512,18 +518,25 @@ def show_graph_data():
     #adds the precitpiton data
     line += precip_word
     line += (PRECIP_GRAPH_COL_LEN * len(precip_forecast) - len(precip_word)) * " "
-    line += " ║"
+    
+    line += (full_width-len(line)-2)*" " + "║"
     res_line += line + "\n"
 
     space_index = math.floor(PRECIP_GRAPH_COL_LEN/2) * " "
 
     has_bad_precip = False
 
+
     #because it is made in a terminal the print statements must be calculated top to bottom, 
     #this stats at the highest positon and goes all the way down to -1 where the days are put
     for height in range(MAX_HEIGHT,-2,-1):
     
         line = "║"
+    
+        #length of every single graph and its padding
+        all_graph_len = 0
+
+
 
         #will generate graphs unless below 0 because that is where the plot names are 
         if height >= 0:
@@ -531,11 +544,12 @@ def show_graph_data():
             #prints the average temprature of that bar for the y plot names
             string_temp = str((height)*index_temp + lower_bounds_total_temp)
             line+= string_temp
-
+            
+            all_graph_len += string_width 
+            
             #will add an extra space if smaller than string_width
             if len(string_temp) <string_width:
                 line += (string_width - len(string_temp))*" "
-            
 
             #goes through each x axis 
             for max_temp_ind in range(len(weath_height_max)):
@@ -558,10 +572,13 @@ def show_graph_data():
                 #if more print blue
                 else:
                     line += Back.BLUE +string_width *" "
+            
+                all_graph_len += string_width
 
             #re    print(warn_data)sets the backrounds when switching to each graph
             line += Back.RESET
             line += WIDTH_BETWEEN_GRAPHS * " "
+            all_graph_len += WIDTH_BETWEEN_GRAPHS
 
             #goes through each x axis
             for min_temp_ind in range(len(weath_height_min)):
@@ -584,11 +601,12 @@ def show_graph_data():
                 # if more then print blue
                 else:
                     line += Back.BLUE +string_width *" "
-
+            
+                all_graph_len += string_width
             #resets the backrounds when switching to each graph
             line += Back.RESET
             line += WIDTH_BETWEEN_GRAPHS * " "
-    
+            all_graph_len += WIDTH_BETWEEN_GRAPHS 
     
             # checks if between the heights so it can print the humidity 
             if height >= 0 and height <= 10:
@@ -599,7 +617,8 @@ def show_graph_data():
                 #will add an extra space if smaller than string_width
                 if len(string_temp) < 3:
                     line += (3 - len(string_temp))*" "
-                    
+               
+                all_graph_len += 3
                 #prints the bars and adds the bars that are for non zero precipitation chance.
                 for precip_ind in range(len(precip_forecast)):
                     
@@ -624,7 +643,8 @@ def show_graph_data():
                             line += str(all_colors[precip_ind][1][height]) + space_index 
                         else:
                             line += Back.RESET + space_index  
-
+                    all_graph_len += len(space_index)*2
+                    
                         
                 #resets at the end
                 line += Back.RESET
@@ -634,23 +654,27 @@ def show_graph_data():
         else: 
 
             line += (string_width)*" "        
-            
+            all_graph_len += string_width 
             #prints out each day time for each of the bars in the maximum temp
             for day in temp_forecast_max_day:
                 days_words.setdefault(day,"HD")
                 line += days_words.get(day) + (string_width - len(days_words.get(day)))*" "
+                all_graph_len += string_width 
 
             #break between the two graphs
             line += WIDTH_BETWEEN_GRAPHS * " "    
-            
+            all_graph_len += WIDTH_BETWEEN_GRAPHS
+
             #prints out each day time for each of the bars in the minumum temp
             for day in temp_forecast_min_day:
                 days_words.setdefault(day,"HD")
                 line += days_words.get(day) + (string_width - len(days_words.get(day)))*" "
+                
+                all_graph_len += string_width
 
             #break between minumum and humidity
             line += WIDTH_BETWEEN_GRAPHS * " "  + "   "  
-
+            all_graph_len += WIDTH_BETWEEN_GRAPHS + 3
 
             # prints out a day for each bar
             day_ind = 0
@@ -666,11 +690,13 @@ def show_graph_data():
                     
                 days_words.setdefault(day,"HD")
                 line += days_words.get(day) + (PRECIP_GRAPH_COL_LEN-2)*" " + Back.RESET
+                all_graph_len += PRECIP_GRAPH_COL_LEN 
 
                 day_ind += 1
             line += Back.RESET
         #ends the line
-        line += " ║"
+        
+        line += (full_width -all_graph_len-3)*" "+"║"
 
         res_line += line +"\n"
 
@@ -1114,7 +1140,6 @@ if __name__ == '__main__':
     # #string = "https://forecast.weather.gov/MapClick.php?lat=43.8014&lon=-91.2396&unit=0&lg=english&FcstType=dwml"
     
     #gets the xml from NOAA
-
     weather_data = requests.get(string)
     weather_xml = BeautifulSoup(weather_data.text, "xml")
     
@@ -1137,8 +1162,7 @@ if __name__ == '__main__':
     
     
     #gets local station data(location where actual sensors are)
-    station = weather_xml.find_all("data")[1]
-    
+    station = weather_xml.find_all("data",attrs={"type" : "current observations"})[0]
     local_station_name = station.find("location").find("area-description").text
 
     #will get nan response if there is no element
@@ -1194,11 +1218,21 @@ if __name__ == '__main__':
     except:
         local_station_wind_sustained = "NaN"
         print("WARN: failed to get local station wind sustained")
-        
+      
+
+
     #units
     wind_units = station.find("wind-speed").get_attribute_list("units")[0]
     visibility_units = station.find_all("weather-conditions")[1].find("visibility").get_attribute_list("units")[0]
-    temp_units = station.find_all(attrs={"type" : "apparent"})[0].get_attribute_list("units")[0]
+    temp_units = "NaN"
+    try:
+        temp_units = station.find_all("temperature", attrs={"type" : "apparent"})[0].get_attribute_list("units")[0]
+    except:
+        try:
+            temp_units = station.find_all("temperature", attrs={"type" : "air"})[0].get_attribute_list("units")[0]
+        except:
+            print("WARN: failed air tempreature")
+
     height_units = station.find("location").find("height").get_attribute_list("height-units")[0]
 
     worded_data = []
@@ -1306,6 +1340,7 @@ if __name__ == '__main__':
         if string_width < len(str(i)):
             string_width = len(str(i));
     string_width +=2
+
     
     
     #gets terminal size
@@ -1315,9 +1350,15 @@ if __name__ == '__main__':
     #temp for testing on jupyterlab
     #columns = 176
     
+    #minimum size the station can have
+    min_width = 110
+
     #calculates how wide the window will be because some temps are more than two digites ie 100 degrees
     full_width = 1 + string_width * (len(temp_forecast_min)+len(temp_forecast_max)+1) + WIDTH_BETWEEN_GRAPHS*2 + 3 + PRECIP_GRAPH_COL_LEN*len(precip_forecast) + 3
-    
+  
+    if(full_width <= min_width):
+        full_width= min_width
+
     #checks if the window width is greater than the TUI window
     all_lines = "" 
 
