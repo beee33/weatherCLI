@@ -976,7 +976,7 @@ if __name__ == '__main__':
              
             Default time format: 12 hours
 
-            weatherCLI v1.3.0
+            weatherCLI v2.0.1
         '''))
     parser.add_argument("zipcode", type=str, help="town or city name shoud be the query \"town:<town name> <State>\" zipcodes should be \"zip:<zipcode>\" and points of intrest should be \"poi:<placename>\"")
     parser.add_argument("-t", "--type", type=str, help="how complatated the data will be: simple | most | all | onlywarnings | onlyworded | onlysun",default="All")
@@ -989,7 +989,7 @@ if __name__ == '__main__':
     parser.add_argument("-k", "--noshowkeys", help="Do not render the weather color definitions", action='store_true')
     parser.add_argument("-r", "--raw", help="Only print NOAA's XML result", action='store_true')
     
-    parser.add_argument('-v','--version', action='version', version='weatherCLI v2.0.0')
+    parser.add_argument('-v','--version', action='version', version='weatherCLI v2.0.1')
 
     
     #runs arguments
