@@ -240,13 +240,15 @@ def show_word_data() :
 
         
         for split_word in word.split():
-            words_len += len(split_word) + 1
-            if words_len >= full_width -9:
+            #words_len += len(split_word) + 1
+            if words_len >= full_width -len(split_word) -4 :
                 
                 res_line += "║ "+ line + (full_width-4-len(line)) * " " +"║ \n" 
                 words_len = 0
                 line = ""
             line += split_word + " " 
+            words_len += len(split_word) + 1
+ 
         res_line += "║ " + line  + (full_width-4-len(line)) * " " +"║ \n"
         word_ind += 1
         if word_ind_len != word_ind:
@@ -597,7 +599,7 @@ def show_graph_data():
                     #will add an extra space if smaller than string_width
                     if len(string_temp) <string_width:
                         line += (string_width - len(string_temp))*" "
-                        show_word_data
+                        #show_word_data
                 #if less print red
                 elif(height < weath_height_min[min_temp_ind]):
                     line += Back.RED +string_width *" "
@@ -980,7 +982,7 @@ if __name__ == '__main__':
              
             Default time format: 12 hours
 
-            weatherCLI v2.0.1
+            weatherCLI v2.0.3
         '''))
     parser.add_argument("zipcode", type=str, help="town or city name shoud be the query \"town:<town name> <State>\" zipcodes should be \"zip:<zipcode>\" and points of intrest should be \"poi:<placename>\"")
     parser.add_argument("-t", "--type", type=str, help="how complatated the data will be: simple | most | all | onlywarnings | onlyworded | onlysun",default="All")
@@ -995,7 +997,7 @@ if __name__ == '__main__':
     parser.add_argument("-u", "--suppress", help="Ignore warnings from weather type unknown", action='store_true')
     
 
-    parser.add_argument('-v','--version', action='version', version='weatherCLI v2.0.1')
+    parser.add_argument('-v','--version', action='version', version='weatherCLI v2.0.3')
 
     #runs arguments
     args = parser.parse_args()
