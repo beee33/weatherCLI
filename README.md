@@ -109,7 +109,8 @@ Depenencies:
 
 __Instlation Script:__
 
-    curl <website>
+    curl https://raw.githubusercontent.com/beee33/weatherCLI/master/main.py -o install-non-root.sh 
+
 
 __Read script, this is optional. However you should always review programs before you give them access to your computer:__
     
@@ -125,7 +126,8 @@ This script gives you a choice on either to compile it yourself or just download
     
 
     ./install-non-root.sh 
-    
+
+
 </details>
 <details>
   <summary>
