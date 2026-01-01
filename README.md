@@ -94,15 +94,20 @@ The National Weather Service allows you to generate XML files showing weather da
 :x:: Broken
 
 ## Install
-You can either run the program as a Python binary though the script, run it in a virtual envirotment with venv, or compile it yourself without the instlation script(only usefull if you are dev enviorment)
-### Option 1: download instlation script
+You can either run the program as a Python binary though the script, run it in a virtual envirotment with venv and compile it yourself without the instlation script(only usefull if you helping develop this software).
+
+
+<details>
+  <summary>
+      <h3> Option 1: download instlation script</h3>
+  </summary>
 Depenencies:
     
 - python3
 - git
 - curl
 
-__Instlation script:__
+__Instlation Script:__
 
     curl <website>
 
@@ -114,52 +119,83 @@ __Make Executable:__
 
     chmod +x install-non-root.sh 
 
-__run script__
+__Run Script__
 
 This script gives you a choice on either to compile it yourself or just download the binary. Try compiling it if you are on a non Intel based processor.
     
 
     ./install-non-root.sh 
     
-
-
-
-
-
-
-#### potental problems with compiling
-
-
-
-if you get the error: "[PYI-1890462:ERROR] Failed to load Python shared library '/tmp/_MEIWYQO9N/libpython3.10.so': dlopen: /tmp/_MEIWYQO9N/libpython3.10.so: cannot open shared object file: No such file or directory"
-
-This command fixes that so pyinstaller knows python's path.
-This should be replaced with your python version and the temp directory may be diffrent, I was using python 3.10.
-
-    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/python3.10
-
-#### generating requiremnts.txt
-install dependencies
-
-    pip install pipreqs
-
-run pipreqs, after executing, it will generate a reqirements.txt file in your project directory
-
-*Note: --scan-notebooks I am running this in a Jupyter Notebook, so the program will scan for files there, you can remove this if you are not using Jupyter Notebooks.
-
-*Note: --force, Use this to override previous reqirements.txt files, you dont need this if you are not overriding any files.
-
-    pipreqs <project directory> --force --scan-notebooks
-
-Test if it works, by following steps: 3 4a/4b:
-
-[Run progam as python file](#user-content-3-cd-into-weathercli-directory)
-
-##### If you get bs4.FeatureNotFound: Couldn't find a tree builder with the features you requested: xml. Do you need to install a parser library? error.
-This is because the reqirements.txt file misses a required library that BeautfulSoup uses. Add missing library.
-
-    echo "lxml==5.3.1" >> requirements.txt 
+</details>
+<details>
+  <summary>
+    <h3>Option 2: Run in a Virtual Enviorment and Compile it yourself</h3>
+  </summary>
+      Depenencies:
     
+- python3
+- git
+
+__Download this git:__
+
+    git clone https://github.com/beee33/weatherCLI
+    cd weatherCLI
+
+__Make Virtual Enviorment__
+
+    python3 -m venv <name>
+
+__Enter Virtual Enviroemnt__
+
+    source <name>/bin/activate
+
+__Install Dependencies__
+
+    python3 -m pip install -r requirements.txt
+
+__Prepare the Configuration locations__
+Your system may not have ~/.config folder, and you may need to make it.
+
+    mkdir ~/.config/weatherCLI
+    
+
+__Run the Program__
+The program should work as expected, but you may want to compile it into a binary using pyinstaller
+    
+    python main.py
+
+
+## Compiling this program
+I used pyinstaller to make this python program into a binary that has all depencenices bundled in, and this is how I make the binaries for this project. For this to work you need to have created your virtual envorment and installed all the depenencies.
+
+    pip install pyinstaller
+
+Compile the Program:
+
+    pyinstaller main.py --onefile
+
+Your binary should be ./dist/main 
+
+    mv dist/main weatherCLI
+
+make executable with:
+
+    chmod +x weatherCLI
+    
+
+### leaving the virtual enviorment
+
+    deactivate
+
+</details>
+
+
+## generating requiremnts.txt
+only needed to do if you installed some new packages for this program.
+   
+    pip freeze > requirements.txt
+
+
 ## How does weatherCLI know the location?
 
 WeathterCLI uses OpenStreetMaps’s geocoding API to get latitude and longitude positions from user input. It converts the latitude and longitude into a url that has the XML data. This url is stored in “/etc/weatherCLI/&lt;towns/zipcode/places&gt;/&lt;queryname&gt;/url.txt” an example is: “/etc/weatherCLI/towns/Boston\ MA/url.txt”.  The data for the sun positions are only calculated once per day per location, and the output is put in a file so that the user doesn't have to recalculate the same sun data for each day. All of the urls and sun data is stored in “/etc/weatherCLI/”
