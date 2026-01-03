@@ -109,7 +109,7 @@ The National Weather Service allows you to generate XML files showing weather da
 
 #### This script allows you to:
 
-- Compile it into one single program with pyinstaller using the latest release version or directly from the git and installing the compiled version. 
+- Compile it into one single program with pyinstaller using the latest release version or directly from github and installing the compiled version. 
 
 - Use the pre-bundeled program compiled on the latest release and installing it.
 
@@ -118,6 +118,8 @@ The National Weather Service allows you to generate XML files showing weather da
 
   
 __These paths are used by weatherCLI__
+
+(only for the users that used the Installation script)
 
 Program location:
   
