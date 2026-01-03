@@ -1,4 +1,3 @@
-#!/usr/bin/python3
 
 from colorama import Fore, Back, Style
 from decimal import Decimal, getcontext
@@ -6,6 +5,7 @@ from termcolor import colored, cprint
 from bs4 import BeautifulSoup 
 from datetime import datetime 
 from io import StringIO
+from pathlib import Path
 
 import requests
 import argparse
@@ -19,6 +19,9 @@ import os
 import json
 import html
 import pytz
+
+
+conf_file = str(Path.home())+"/.config/weatherCLI"
 
 #gets the worded forecast, ie: "partly sunny", and converts it into a array of bash color codes to be viewed in the terminal
 def turn_word_data_to_type(worded_data_in):
@@ -287,12 +290,16 @@ def show_sun_data():
 
     #gets current time
     cur_date= datetime.today().strftime('%m%d%Y')
+    
+    print(url_siders)
 
     #adds that to a file that may or may not exist, if not it will be created later
-    cur_data_file = "/etc/weatherCLI"+url_siders+"/"+name_string+"/date_"+cur_date+".txt"
+    cur_data_file = conf_file+url_siders+"/"+name_string+"/date_"+cur_date+".txt"
 
     #gets the file for the utc offset
-    cur_timezone_file = "/etc/weatherCLI"+url_siders+"/"+name_string+"/utc_offset.txt"
+    cur_timezone_file = conf_file+url_siders+"/"+name_string+"/utc_offset.txt"
+    
+    #print(cur_timezone_file,cur_data_file)
 
     #sets default as 0
     utc_offset = 0
@@ -321,7 +328,7 @@ def show_sun_data():
     
     #this section is so that any file that has the date_ signaute and is not of current date will be deleted
     #gets current directory files
-    dir_contents = os.listdir("/etc/weatherCLI"+url_siders+"/"+name_string) 
+    dir_contents = os.listdir(conf_file+url_siders+"/"+name_string) 
 
     #goes through each of them
     for file in dir_contents:
@@ -333,7 +340,7 @@ def show_sun_data():
             if file != "date_"+cur_date+".txt":
 
                 #deletes file
-                os.remove("/etc/weatherCLI/"+url_siders+"/"+name_string+"/"+file)
+                os.remove(conf_file+"/"+url_siders+"/"+name_string+"/"+file)
 
 
     
@@ -1033,8 +1040,10 @@ if __name__ == '__main__':
         
         
         #new file for location
-        url_file = "/etc/weatherCLI"+url_siders+"/"+name_string+"/url.txt"
+        url_file = conf_file+url_siders+"/"+name_string+"/url.txt"
 
+        #print(url_file)
+    
         #checks if exists
         if os.path.isfile(url_file):
 
@@ -1042,14 +1051,14 @@ if __name__ == '__main__':
             url_file = open(url_file, "r")
             string = url_file.read().replace(" ","")
             if string == "":
-                shutil.rmtree("/etc/weatherCLI"+url_siders+"/"+name_string)
+                shutil.rmtree(conf_file+url_siders+"/"+name_string)
                 raise Exception("url file empty, so zip directory was deleted. Try again")
     
         else:
             print("generating "+args.zipcode)
 
             #will make a directory and add it
-            os.makedirs("/etc/weatherCLI"+url_siders+"/"+name_string)
+            os.makedirs(conf_file+url_siders+"/"+name_string)
             url_file = open(url_file, "w")
 
             #gets what type of request it is from
@@ -1081,7 +1090,7 @@ if __name__ == '__main__':
             if len(loc_json) == 0:
 
                 #deletes entry
-                shutil.rmtree("/etc/weatherCLI"+url_siders+"/"+name_string)
+                shutil.rmtree(conf_file+url_siders+"/"+name_string)
                 raise Exception("invalid place name/zipcode/POI")
 
             #gets the most likely entry
