@@ -5,9 +5,6 @@
 weatherCLI is a Linux command line UI based application that shows the user the weather and sun information from the National Weather Service written in Python. 
 Because of this, weatherCLI is only available in the United States, and its territories, However, the sun calculation is worldwide.
 
-:x: searching by using location names eg: Boston MA are broken :( 
-I am currently fixing it.
-
 <img src="https://github.com/user-attachments/assets/eb9a932e-d8c4-4070-9cf4-cd73e49b40bb" width="100%" ></img>
 
 AI Statment

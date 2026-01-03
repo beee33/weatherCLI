@@ -22,6 +22,8 @@ import pytz
 
 
 conf_file = str(Path.home())+"/.config/weatherCLI"
+version_name = "3.0.0"
+
 
 #gets the worded forecast, ie: "partly sunny", and converts it into a array of bash color codes to be viewed in the terminal
 def turn_word_data_to_type(worded_data_in):
@@ -948,7 +950,6 @@ if __name__ == '__main__':
     #tells program what parent directory to put the files in
     url_type = {
         "zip":"/zipcode",
-        "city":"/towns",
         "town":"/towns",
         "poi":"/places"   
     }
@@ -989,7 +990,7 @@ if __name__ == '__main__':
              
             Default time format: 12 hours
 
-            weatherCLI v2.0.3
+            weatherCLI v'''+version_name+'''
         '''))
     parser.add_argument("zipcode", type=str, help="town or city name shoud be the query \"town:<town name> <State>\" zipcodes should be \"zip:<zipcode>\" and points of intrest should be \"poi:<placename>\"")
     parser.add_argument("-t", "--type", type=str, help="how complatated the data will be: simple | most | all | onlywarnings | onlyworded | onlysun",default="All")
@@ -1004,7 +1005,7 @@ if __name__ == '__main__':
     parser.add_argument("-u", "--suppress", help="Ignore warnings from weather type unknown", action='store_true')
     
 
-    parser.add_argument('-v','--version', action='version', version='weatherCLI v2.0.3')
+    parser.add_argument('-v','--version', action='version', version='weatherCLI v'+version_name)
 
     #runs arguments
     args = parser.parse_args()
@@ -1036,7 +1037,7 @@ if __name__ == '__main__':
         
         #returns error if no type
         if url_siders == "None":
-            raise Exception("header is invalid, begin with zip: poi: town: city:")
+            raise Exception("header is invalid, begin with zip: poi: town:")
         
         
         #new file for location
@@ -1065,22 +1066,18 @@ if __name__ == '__main__':
             match args.zipcode[:args.zipcode.find(":")].lower():
                 case "zip":
 
-                    url_string = "https://nominatim.openstreetmap.org/search.php?country=US&postalcode="+args.zipcode[4:]+"&countrycodes=us&format=jsonv2"
+                    url_string = "https://nominatim.openstreetmap.org/search.php?country=US&postalcode="+args.zipcode[4:]+"&countrycodes=us&format=jsonv2&limit=1"
                 case "poi":
-
-                    url_string = "https://nominatim.openstreetmap.org/search.php?street="+args.zipcode[4:].replace(" ","+")+"&country=US&countrycodes=us&format=jsonv2"
+                    url_string = "https://nominatim.openstreetmap.org/search.php?street="+args.zipcode[4:].replace(" ","+")+"&country=US&countrycodes=us&format=jsonv2&limit=1"
+                
                 case "town":
-  
-                    url_string = "https://nominatim.openstreetmap.org/search.php?q="+ args.zipcode[5:][:args.zipcode[5:].rfind(" ")]+"+USA&format=jsonv2"
-                case "city":
-    
-                    url_string = "https://nominatim.openstreetmap.org/search.php?q="+ args.zipcode[5:][:args.zipcode[5:].rfind(" ")]+"+USA&format=jsonv2"
+                    url_string = "https://nominatim.openstreetmap.org/search.php?q="+ args.zipcode[5:][:args.zipcode[5:].rfind(" ")]+"+USA&format=jsonv2&limit=1"
 
                 case _:
-                    raise Exception("header is invalid, begin with zip: poi: town: city:")
+                    raise Exception("header is invalid, begin with zip: poi: town:")
 
             #generates useragent
-            user_agent = {'User-agent': 'Mozilla/5.0'}
+            user_agent = {'User-agent': 'weatherCLI/'+version_name+' (+https://github.com/beee33/weatherCLI)'}
 
             #gets from openstreetmap, using useragent and converts the output into json
             loc_json= json.loads(requests.get(headers = user_agent, url = url_string).text)
