@@ -291,7 +291,7 @@ def show_sun_data():
     #gets current time
     cur_date= datetime.today().strftime('%m%d%Y')
     
-    print(url_siders)
+    #print(url_siders)
 
     #adds that to a file that may or may not exist, if not it will be created later
     cur_data_file = conf_file+url_siders+"/"+name_string+"/date_"+cur_date+".txt"
