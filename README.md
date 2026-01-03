@@ -1,11 +1,18 @@
+
+
 # weatherCLI
 
 weatherCLI is a Linux command line UI based application that shows the user the weather and sun information from the National Weather Service written in Python. 
 Because of this, weatherCLI is only available in the United States, and its territories, However, the sun calculation is worldwide.
 
+:x: searching by using location names eg: Boston MA are broken :( 
+I am currently fixing it.
+
 <img src="https://github.com/user-attachments/assets/eb9a932e-d8c4-4070-9cf4-cd73e49b40bb" width="100%" ></img>
 
-
+AI Statment
+-----------
+NO AI was used in making this program
 
 Application for generating weather using data from NOAA
 -------------------------------------------------------
@@ -91,193 +98,132 @@ The National Weather Service allows you to generate XML files showing weather da
 <br>
 :x:: Broken
 
-## Download
+## Install
 
-### from installer:
 
-#### 1. Dependencys: wget
 
-Can be installed from almost all package managers:
+<details>
+  <summary>
+      <h3> Option 1: Installation script.</h3>
+  </summary>
 
-Debian/Ubuntu/Mint:
+#### This script allows you to:
 
-    sudo apt install wget
+- Compile it into one single program with pyinstaller using the latest release version or directly from the git and installing the compiled version. 
 
-Arch:
+- Use the pre-bundeled program compiled on the latest release and installing it.
 
-    pacman -S wget
+- Uninstall the program and or configuration files.
 
-Fedora
 
-    sudo dnf install wget
+  
+__These paths are used by weatherCLI__
+
+Program location:
+  
+    ~/.local/bin/weather-machine/weatherCLI
+ 
+Configuration location:
+  
+    ~/.config/weatherCLI/
+
+Dependencies:
     
-*may already be installed
+- python3
+- git
+- curl
+
+### __Installation Script:__
+
+    curl https://raw.githubusercontent.com/beee33/weatherCLI/master/install-non-root.sh  -o install-non-root.sh 
+
+
+__Read script, this is optional. However, you should always review programs before you give them access to your computer:__
     
-#### 2. download installer script:
+    less install-non-root.sh 
 
-    wget https://raw.githubusercontent.com/beee33/weatherCLI/main/installer.sh 
-#### 3. run script:
+__Make Executable:__
 
-    sudo sh installer.sh
+    chmod +x install-non-root.sh 
 
-### Only run python file instead:
+__Run Script__
 
-#### 1. download repo and download dependencies
+This script gives you a choice on either to compile it yourself or just download the binary. Try compiling it if you are on a non Intel based processor.
+    
 
-[Follow Build from source instructuions until the end of step 4](#build-from-source)
+    ./install-non-root.sh 
 
 
-#### 2. Run python fille
+</details>
+<details>
+  <summary>
+    <h3>Option 2: Run in a virtual environment and compile it yourself./h3>
+  </summary>
+      Dependencies:
+    
+- python3
+- git
 
-    python3 main.py
+__Download this git:__
 
-### Build from source:
-
-#### 1. Install git
-
-Instructions to install git are on: [Git's website](<https://git-scm.com/book/en/v2/Getting-Started-Installing-Git>)
-however you can just use:
-
-Debian/Ubuntu/Mint:
-
-    sudo apt install git
-
-Fedora
-
-    sudo dnf install git
-
-#### 2. download repo
-
-    git clone "https://github.com/beee33/weatherCLI"
-
-#### Configure venv
-
-#### 3. cd into weatherCLI directory
-
+    git clone https://github.com/beee33/weatherCLI
     cd weatherCLI
 
-#### 4a. Recommended: use python venv 
-
-Create new virtual enviroment using python's venv
+__Make Virtual Environment__
 
     python3 -m venv <name>
 
-Enter venv
+__Enter Virtual Environment__
 
-    
     source <name>/bin/activate
-*Note: if venv works, your shell should have (&lt;name&gt;) in prompt
-Install dependencys
 
-    python3 -m pip install -r requirements.txt
-<br>
-<br>
-
-#### 4b. Not recommended: run without venv
-:exclamation: some Operating Systems eg: Debian, dont like you to install packages in the default python environment, as it may override system packages that are needed. I have bricked a VM by doing this.
-<br>
-<br>
-Install dependencys
+__Install Dependencies__
 
     python3 -m pip install -r requirements.txt
 
+__Prepare the Configuration locations__
+Your system may not have ~/.config folder, and you may need to make it.
 
-<br>
-<br>
+    mkdir ~/.config/weatherCLI
+    
 
-#### 5. install pyinstaller
+__Run the Program__
+The program should work as expected, but you may want to compile it into a binary using pyinstaller
+    
+    python main.py
+
+
+## Compiling this program
+I used pyinstaller to make this python program into a binary that has all dependencies bundled in, and this is how I make the releases for this project. For this step to work you need to have created your virtual environment and installed all the dependencies from the previous steps.
 
     pip install pyinstaller
 
-or
-
-    python3 -m pip install pyinstaller
-
-*Note, you may have to use a virtual enviroment for some systems. You can use something like pyenv to create instances of python with diffrent versions: https://github.com/pyenv/pyenv 
-<br>
-For this program I would reccomend using python 3.10, as that is what version this program is written for. If not, try to rename all instances of it to your python version
-
-
-
-
-
-#### 6. compile to standalone binary if you use venv
-
-This adds the new venv site packages path to pyinstaller, so it can use it. You should replace python3.10 with your python version eg python3.11
-    
-    pyinstaller main.py --onefile --paths "<name>/lib/python3.10/site-packages"
-
-
-Leave virtual enviroment
-
-    deactivate
-
-<br>
-<br>
-
-#### 7. compile to standalone binary if you dont use venv
+Compile the Program:
 
     pyinstaller main.py --onefile
 
-<br>
-<br>
-<br>
-<br>
+Your binary should be ./dist/main 
 
-#### 8. Copy the new binary to the bin directory so it can be accessed by users
-    sudo cp dist/main /usr/bin/weatherCLI
+    mv dist/main weatherCLI
 
-#### 9. Change perms so that any user can access it,but not modify it's code
-    sudo chmod 755 /usr/bin/weatherCLI
+make executable with:
 
-#### 10. make the data directory
-    sudo mkdir /etc/weatherCLI
-
-#### 11a. change access to all users
-
-    sudo chmod 777 -R /etc/weatherCLI
-
-**_*note this directory and its subdirectorys is intended to be accessible for all users_**
-
-#### 11b. if you only want people with sudo perms to access it:
-
-    sudo chmod 711 -R /etc/weatherCLI
-
-
-
-#### potental problems with compiling
-
-
-
-if you get the error: "[PYI-1890462:ERROR] Failed to load Python shared library '/tmp/_MEIWYQO9N/libpython3.10.so': dlopen: /tmp/_MEIWYQO9N/libpython3.10.so: cannot open shared object file: No such file or directory"
-
-This command fixes that so pyinstaller knows python's path.
-This should be replaced with your python version and the temp directory may be diffrent, I was using python 3.10.
-
-    export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/python3.10
-
-#### generating requiremnts.txt
-install dependencies
-
-    pip install pipreqs
-
-run pipreqs, after executing, it will generate a reqirements.txt file in your project directory
-
-*Note: --scan-notebooks I am running this in a Jupyter Notebook, so the program will scan for files there, you can remove this if you are not using Jupyter Notebooks.
-
-*Note: --force, Use this to override previous reqirements.txt files, you dont need this if you are not overriding any files.
-
-    pipreqs <project directory> --force --scan-notebooks
-
-Test if it works, by following steps: 3 4a/4b:
-
-[Run progam as python file](#user-content-3-cd-into-weathercli-directory)
-
-##### If you get bs4.FeatureNotFound: Couldn't find a tree builder with the features you requested: xml. Do you need to install a parser library? error.
-This is because the reqirements.txt file misses a required library that BeautfulSoup uses. Add missing library.
-
-    echo "lxml==5.3.1" >> requirements.txt 
+    chmod +x weatherCLI
     
+
+### leaving the virtual enviorment
+
+    deactivate
+
+</details>
+
+
+## generating requiremnts.txt
+Only needed to do if you installed some new packages for this program.
+
+    pip freeze > requirements.txt
+
+
 ## How does weatherCLI know the location?
 
 WeathterCLI uses OpenStreetMaps’s geocoding API to get latitude and longitude positions from user input. It converts the latitude and longitude into a url that has the XML data. This url is stored in “/etc/weatherCLI/&lt;towns/zipcode/places&gt;/&lt;queryname&gt;/url.txt” an example is: “/etc/weatherCLI/towns/Boston\ MA/url.txt”.  The data for the sun positions are only calculated once per day per location, and the output is put in a file so that the user doesn't have to recalculate the same sun data for each day. All of the urls and sun data is stored in “/etc/weatherCLI/”
