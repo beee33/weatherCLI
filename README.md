@@ -99,25 +99,46 @@ The National Weather Service allows you to generate XML files showing weather da
 :x:: Broken
 
 ## Install
-You can either run the program as a Python binary though the script, run it in a virtual envirotment with venv and compile it yourself without the instlation script(only usefull if you helping develop this software).
+
 
 
 <details>
   <summary>
-      <h3> Option 1: download instlation script</h3>
+      <h3> Option 1: Installation script.</h3>
   </summary>
-Depenencies:
+
+#### This script allows you to:
+
+- Compile it into one single program with pyinstaller using the latest release version or directly from the git and installing the compiled version. 
+
+- Use the pre-bundeled program compiled on the latest release and installing it.
+
+- Uninstall the program and or configuration files.
+
+
+  
+__These paths are used by weatherCLI__
+
+Program location:
+  
+    ~/.local/bin/weather-machine/weatherCLI
+ 
+Configuration location:
+  
+    ~/.config/weatherCLI/
+
+Dependencies:
     
 - python3
 - git
 - curl
 
-__Instlation Script:__
+### __Installation Script:__
 
-    curl https://raw.githubusercontent.com/beee33/weatherCLI/master/main.py -o install-non-root.sh 
+    curl https://raw.githubusercontent.com/beee33/weatherCLI/master/install-non-root.sh  -o install-non-root.sh 
 
 
-__Read script, this is optional. However you should always review programs before you give them access to your computer:__
+__Read script, this is optional. However, you should always review programs before you give them access to your computer:__
     
     less install-non-root.sh 
 
@@ -136,9 +157,9 @@ This script gives you a choice on either to compile it yourself or just download
 </details>
 <details>
   <summary>
-    <h3>Option 2: Run in a Virtual Enviorment and Compile it yourself</h3>
+    <h3>Option 2: Run in a virtual environment and compile it yourself./h3>
   </summary>
-      Depenencies:
+      Dependencies:
     
 - python3
 - git
@@ -148,11 +169,11 @@ __Download this git:__
     git clone https://github.com/beee33/weatherCLI
     cd weatherCLI
 
-__Make Virtual Enviorment__
+__Make Virtual Environment__
 
     python3 -m venv <name>
 
-__Enter Virtual Enviroemnt__
+__Enter Virtual Environment__
 
     source <name>/bin/activate
 
@@ -173,7 +194,7 @@ The program should work as expected, but you may want to compile it into a binar
 
 
 ## Compiling this program
-I used pyinstaller to make this python program into a binary that has all depencenices bundled in, and this is how I make the binaries for this project. For this to work you need to have created your virtual envorment and installed all the depenencies.
+I used pyinstaller to make this python program into a binary that has all dependencies bundled in, and this is how I make the releases for this project. For this step to work you need to have created your virtual environment and installed all the dependencies from the previous steps.
 
     pip install pyinstaller
 
@@ -198,8 +219,8 @@ make executable with:
 
 
 ## generating requiremnts.txt
-only needed to do if you installed some new packages for this program.
-   
+Only needed to do if you installed some new packages for this program.
+
     pip freeze > requirements.txt
 
 
