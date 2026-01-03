@@ -157,7 +157,7 @@ This script gives you a choice on either to compile it yourself or just download
 </details>
 <details>
   <summary>
-    <h3>Option 2: Run in a virtual environment and compile it yourself./h3>
+    <h3>Option 2: Run in a virtual environment and compile it yourself.</h3>
   </summary>
       Dependencies:
     
@@ -182,12 +182,14 @@ __Install Dependencies__
     python3 -m pip install -r requirements.txt
 
 __Prepare the Configuration locations__
+
 Your system may not have ~/.config folder, and you may need to make it.
 
     mkdir ~/.config/weatherCLI
     
 
 __Run the Program__
+
 The program should work as expected, but you may want to compile it into a binary using pyinstaller
     
     python main.py
