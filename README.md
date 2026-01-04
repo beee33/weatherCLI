@@ -131,6 +131,7 @@ Dependencies:
 - python3
 - git
 - curl
+- python venv (If compiling it yourself)
 
 ### __Installation Script:__
 
