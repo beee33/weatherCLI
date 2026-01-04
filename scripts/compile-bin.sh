@@ -1,10 +1,10 @@
 
 
-install_folder=$(mktemp -d)
+#install_folder=$(mktemp -d)
 
 
 #echo $install_folder;
-cd $install_folder;
+#cd $install_folder;
 
 
 # will loop untill user selects valid responce
@@ -40,10 +40,10 @@ then
 		
 		if [ $is_version = "1" ]
 		then
-			echo "cloning weatherCLI";
-			git clone https://github.com/beee33/weatherCLI
-		
-			cd weatherCLI
+			#echo "cloning weatherCLI";
+			#git clone https://github.com/beee33/weatherCLI
+	
+			#cd weatherCLI
 		else
 			echo "cloning latest version:";
 			download_link=$(curl -s https://api.github.com/repos/beee33/weatherCLI/releases/latest | grep "tarball_url" | cut -d '"' -f 4)
