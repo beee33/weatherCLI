@@ -33,7 +33,7 @@ comp_bin() {
 
         check_command_git_install=$(command -v git)
         check_command_python3_install=$(command -v python3) 
-	check_command_venv_install=$(python -m venv -h | grep "positional arguments:")
+	check_command_venv_install=$(python3 -m venv -h | grep "positional arguments:")
 
         if [ -n "$check_command_git_install" ] 
         then
