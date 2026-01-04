@@ -38,13 +38,13 @@ then
 	if [ -n "$check_command_python3_install" ] 
 	then
 		
-		if [ $is_version = "1" ]
+		if [ $is_version = "2" ]
 		then
 			#echo "cloning weatherCLI";
 			#git clone https://github.com/beee33/weatherCLI
 	
 			#cd weatherCLI
-		else
+		#else
 			echo "cloning latest version:";
 			download_link=$(curl -s https://api.github.com/repos/beee33/weatherCLI/releases/latest | grep "tarball_url" | cut -d '"' -f 4)
 			echo $download_link;
