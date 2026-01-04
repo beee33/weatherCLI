@@ -121,14 +121,16 @@ install_binary() {
 
 	cd weatherCLI
 
+	$temp_folder=$(pwd)
 
 	if [ $install_type = "2" ] 
 	then 
 		chmod +x scripts/compile-bin.sh
-	       	sh scripts/compile-bin.sh
+		sh scripts/compile-bin.sh
 		
 	fi
 
+	cd $temp_folder
 
 	chmod +x scripts/add-path.sh 
 	sh scripts/add-path.sh
