@@ -1,12 +1,196 @@
 #!/bin/bash
 
+comp_bin() {
+        install_folder=$(mktemp -d)
+
+
+        echo $install_folder;
+        cd $install_folder;
+
+
+        # will loop untill user selects valid responce
+        while true
+        do
+
+
+        # reads user input
+        echo "";
+        echo "";
+
+        echo "What version do you want to compile?";
+        echo "1) compile from latest stable version source (Recommended)";
+        echo "2) compile directly from github source";
+        echo -n ">";
+        read is_version;
+        echo "";
+        if [ "$is_version" = "1" ] || [ "$is_version" = "2" ]
+        then
+                break
+        fi
+
+        done
+
+
+        check_command_git_install=$(command -v git)
+        check_command_python3_install=$(command -v python3) 
+
+        if [ -n "$check_command_git_install" ] 
+        then
+                if [ -n "$check_command_python3_install" ] 
+                then
+
+                        if [ $is_version = "1" ]
+                        then
+                                echo "cloning weatherCLI";
+                                git clone https://github.com/beee33/weatherCLI
+
+                                cd weatherCLI
+                        else
+                                echo "cloning latest version:";
+                                download_link=$(curl -s https://api.github.com/repos/beee33/weatherCLI/releases/latest | grep "tarball_url" | cut -d '"' -f 4)
+                                echo $download_link;
+                                curl -L $download_link -o latest.tar.gz
+
+                                tar -xf latest.tar.gz
+
+                                file_to_goto=$(ls | grep weatherCLI)
+                                cd $file_to_goto
+
+                        fi
+
+                        echo "creating virtual environment";
+                        python3 -m venv venv
+
+                        echo "entering virtual environment";
+                        source venv/bin/activate
+
+                        echo "installing dependencys";
+                        python3 -m pip install -r requirements.txt
+
+                        echo "installing pyinstaller"
+                        python3 -m pip install pyinstaller
+
+                        echo "compiling";
+                        pyinstaller main.py --onefile
+
+                        mv dist/main weatherCLI
+
+                        mkdir ~/.local/bin/weather-machine/
+                        cp weatherCLI ~/.local/bin/weather-machine/weatherCLI
+                        chmod +x ~/.local/bin/weather-machine/weatherCLI
+
+
+
+                else
+                        echo "python3 not installed. Exiting.";
+                        exit
+                fi
+
+        else
+                echo "git not installed. Exiting.";
+                exit
+        fi
+
+
+
+}
+
+add_path() {
+        # will loop untill user selects valid responce
+        while true
+        do
+
+        # reads user input
+
+        echo "";
+        echo "";
+        echo "Would you like to add this program to your \$PATH.";
+        echo "This allows you to type in weatherCLI instead of typing";
+        echo "~/.local/bin/weather-machine/weatherCLI every time you execute it in your terminal.";
+        echo "This will only work if you use bash/zsh or any POSIX shell."
+
+        echo "";
+        echo -n "Add to path? [Y/N] (default Y)";
+        read is_purge;
+
+        echo "";
+        echo "";
+        if [ "$is_purge" = "Y" ] || [ "$is_purge" = "y" ]
+        then
+                if [ -e ~/.zshrc ]
+                then
+                        check_is_added=$(grep "export PATH=\$PATH:~/.local/bin/weather-machine" ~/.zshrc)
+                        if [ "$check_is_added"  == "" ] 
+                        then
+                                echo "export PATH=\$PATH:~/.local/bin/weather-machine" >> ~/.zshrc
+                                echo "added to ~/.zshrc";
+                        fi
+
+
+                fi
+                if [ -e ~/.bashrc ] 
+                then
+                        check_is_added=$(grep "export PATH=\$PATH:~/.local/bin/weather-machine" ~/.bashrc)
+                        if [ "$check_is_added"  == "" ]
+                        then
+                                echo "export PATH=\$PATH:~/.local/bin/weather-machine" >> ~/.bashrc
+                                echo "added to ~/.bashrc";
+                        fi
+                fi
+
+                #PATH=$PATH:~/.local/bin/weather-machine 
+
+                echo "Added all rc files!";
+                break 
+        else
+                break
+        fi
+done
+
+
+
+}
+
+remove_path() {
+        if [ -e ~/.zshrc ]
+        then
+                check_is_added=$(grep "export PATH=\$PATH:~/.local/bin/weather-machine" ~/.zshrc)
+                if [ "$check_is_added"  != "" ]
+                then
+
+                        script_val=$( grep -v "export PATH=\$PATH:~/.local/bin/weather-machine" ~/.zshrc | cat )
+                        echo "$script_val" > ~/.zshrc
+                        echo "removed ~/.zshrc path";
+                fi
+
+
+        fi
+
+
+        if [ -e ~/.bashrc ]
+        then
+                check_is_added=$(grep "export PATH=\$PATH:~/.local/bin/weather-machine" ~/.bashrc)
+                if [ "$check_is_added"  != "" ]
+                then
+
+                        script_val=$( grep -v "export PATH=\$PATH:~/.local/bin/weather-machine" ~/.bashrc | cat )
+                        echo "$script_val" > ~/.bashrc
+                        echo "removed ~/.bashrc path";
+                fi
+        fi
+
+
+
+}
+
+
+
 
 remove_weathercli() {
 
 	rm -rf ~/.local/bin/weather-machine/
-
-	chmod +x scripts/remove-path.sh  
-	sh scripts/remove-path.sh
+	
+	remove_path
 
 	echo "removed weathercli";
 }
@@ -111,29 +295,26 @@ install_binary() {
 
 	fi
 	
-	weather_folder=$(mktemp -d)
+	#weather_folder=$(mktemp -d)
 
-	cd $weather_folder
+	#cd $weather_folder
 
-	echo $weather_folder;
+	#echo $weather_folder;
 	
-	git clone https://github.com/beee33/weatherCLI
+	#git clone https://github.com/beee33/weatherCLI
 
-	cd weatherCLI
+	#cd weatherCLI
 
-	$temp_folder=$(pwd)
+	#$temp_folder=$(pwd)
 
 	if [ $install_type = "2" ] 
 	then 
-		chmod +x scripts/compile-bin.sh
-		sh scripts/compile-bin.sh
-		
+		comp_bin	
 	fi
 
-	cd $temp_folder
+	#cd $temp_folder
 
-	chmod +x scripts/add-path.sh 
-	sh scripts/add-path.sh
+	add_path
 
 	cd $orignal_location
 }
