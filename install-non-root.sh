@@ -110,6 +110,18 @@ install_binary() {
 
 
 	fi
+	
+	weather_folder=$(mktemp -d)
+
+	cd $weather_folder
+
+	echo $weather_folder;
+	
+	git clone https://github.com/beee33/weatherCLI
+
+	cd weatherCLI
+
+
 	if [ $install_type = "2" ] 
 	then 
 		chmod +x scripts/compile-bin.sh
@@ -117,10 +129,11 @@ install_binary() {
 		
 	fi
 
-	cd $orignal_location
 
 	chmod +x scripts/add-path.sh 
 	sh scripts/add-path.sh
+
+	cd $orignal_location
 }
 
 install_conf() {
