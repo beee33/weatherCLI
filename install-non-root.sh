@@ -60,6 +60,10 @@ comp_bin() {
 
 			fi
 
+			pwd
+			ls -l 
+			
+
 			echo "creating virtual environment";
 			python3 -m venv venv
 
@@ -71,7 +75,6 @@ comp_bin() {
 
 			fi
 			
-			env
 
 			echo "entering virtual environment";
 			source venv/bin/activate
@@ -182,7 +185,9 @@ remove_path() {
                 then
 
                         script_val=$( grep -v "export PATH=\$PATH:~/.local/bin/weather-machine" ~/.zshrc | cat )
-                        echo "$script_val" > ~/.zshrc
+                	cp ~/.zshrc ~/.zshrc.bak       	
+			
+			echo "$script_val" > ~/.zshrc
                         echo "removed ~/.zshrc path";
                 fi
 
@@ -197,7 +202,9 @@ remove_path() {
                 then
 
                         script_val=$( grep -v "export PATH=\$PATH:~/.local/bin/weather-machine" ~/.bashrc | cat )
-                        echo "$script_val" > ~/.bashrc
+                        cp ~/.bashrc ~/.bashrc.bak
+
+			echo "$script_val" > ~/.bashrc
                         echo "removed ~/.bashrc path";
                 fi
         fi
