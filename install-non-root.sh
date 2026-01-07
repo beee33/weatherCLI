@@ -63,9 +63,8 @@ comp_bin() {
 			echo "creating virtual environment";
 			python3 -m venv venv
 
-			venv_is_works=$(ls venv | grep "No such file or directory")
 
-			if [ -n "$venv_is_works" ] 
+			if [ ! -f venv/bin/activate ] 
 			then
 				echo "venv not installed";
 				exit
@@ -165,7 +164,6 @@ add_path() {
 
                 #PATH=$PATH:~/.local/bin/weather-machine 
 
-                echo "Added all rc files!";
                 break 
         else
                 break
@@ -320,24 +318,12 @@ install_binary() {
 
 	fi
 	
-	#weather_folder=$(mktemp -d)
-
-	#cd $weather_folder
-
-	#echo $weather_folder;
-	
-	#git clone https://github.com/beee33/weatherCLI
-
-	#cd weatherCLI
-
-	#$temp_folder=$(pwd)
 
 	if [ $install_type = "2" ] 
 	then 
 		comp_bin	
 	fi
 
-	#cd $temp_folder
 
 	add_path
 
