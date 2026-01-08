@@ -76,25 +76,23 @@ weather warnings (example: Frost Advisory, Winter Storm Warning or Severe Thunde
 
 The National Weather Service allows you to generate XML files showing weather data from a specific longitude and latitude. This program reads those XML files and presents them to the user as readable data. To get the sun positions, the program uses the US Navy's API for getting sun info expressed in json, and prints the result out on terminal.
 
-## Supported operating systems
+## Tested on the following operating systems
 | OS           | Supported?                     |
 | :----------- | :--------------:               |
 | Debian       | :white_check_mark:             | 
 | Manjaro | :white_check_mark: |
 | Arch | :white_check_mark:  |
-| Mint | :large_orange_diamond: |
-| Fedora | :large_orange_diamond:    |
-| Ubuntu       | :large_orange_diamond:             |
-| Pop OS | :large_orange_diamond: |
-| EndeavourOS | :large_orange_diamond: |
-| Windows      | :x: |
+| Mint | :white_check_mark: |
+| Fedora | :white_check_mark:    |
+| Ubuntu       | :white_check_mark:         |
+| Windows      | :x:   |
 
 
-:white_check_mark:: Tested (as of weatherCLI version 3.0.0)
-<br>
-:large_orange_diamond:: Untested
+:white_check_mark:: Working (as of weatherCLI version 3.0.0)
 <br>
 :x:: Broken
+
+If your distro does not exist in this list, it likely would still work. I have no idea if would work on macOS. 
 
 ## Install
 
