@@ -90,7 +90,7 @@ The National Weather Service allows you to generate XML files showing weather da
 | Windows      | :x: |
 
 
-:white_check_mark:: Supported
+:white_check_mark:: Tested (as of weatherCLI version 3.0.0)
 <br>
 :large_orange_diamond:: Untested
 <br>
