@@ -96,6 +96,12 @@ comp_bin() {
 			echo "compiling";
 			pyinstaller main.py --onefile
 
+			if [ -f dist/main ] 
+			then
+				echo "program not built";
+				exit
+			fi
+
 			mv dist/main weatherCLI
 
 			mkdir ~/.local/bin/weather-machine/
