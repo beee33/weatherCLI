@@ -80,16 +80,17 @@ The National Weather Service allows you to generate XML files showing weather da
 | OS           | Supported?                     |
 | :----------- | :--------------:               |
 | Debian       | :white_check_mark:             | 
-| Ubuntu       | :white_check_mark:             |
-| Fedora | :white_check_mark:    |
+| Manjaro | :white_check_mark: |
 | Arch | :white_check_mark:  |
 | Mint | :large_orange_diamond: |
+| Fedora | :large_orange_diamond:    |
+| Ubuntu       | :large_orange_diamond:             |
 | Pop OS | :large_orange_diamond: |
 | EndeavourOS | :large_orange_diamond: |
 | Windows      | :x: |
 
 
-:white_check_mark:: Supported
+:white_check_mark:: Tested (as of weatherCLI version 3.0.0)
 <br>
 :large_orange_diamond:: Untested
 <br>
