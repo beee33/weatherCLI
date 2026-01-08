@@ -162,6 +162,7 @@ This script gives you a choice on either to compile it yourself or just download
     
 - python3
 - git
+- python venv
 
 __Download this git:__
 
